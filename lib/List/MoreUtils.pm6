@@ -489,11 +489,199 @@ List::MoreUtils - Port of Perl 5's List::MoreUtils 0.428
 
 =head1 SYNOPSIS
 
-  use List::MoreUtils;
+    # import specific functions
+    use List::MoreUtils <any uniq>;
+ 
+    if any { /foo/ }, uniq @has_duplicates {
+        # do stuff
+    }
+ 
+    # import everything
+    use List::MoreUtils ':all';
 
 =head1 DESCRIPTION
 
-List::MoreUtils is ...
+List::MoreUtils provides some trivial but commonly needed functionality on
+lists which is not going to go into C<List::Util>.
+
+=head1 EXPORTS
+
+Nothing by default. To import all of this module's symbols use the C<:all>
+tag. Otherwise functions can be imported by name as usual:
+
+    use List::MoreUtils :all;
+ 
+    use List::MoreUtils <any firstidx>;
+
+=head1 Porting Caveats
+
+Perl 6 does not have the concept of C<scalar> and C<list> context.  Usually,
+the effect of a scalar context can be achieved by prefixing C<+> to the
+result, which would effectively return the number of elements in the result,
+which usually is the same as the scalar context of Perl 5 of these functions.
+
+Perl 6 does not have a magic C<$a> and C<$b>.  But they can be made to exist
+by specifying the correct signature to blocks, specifically "-> $a, $b".
+These have been used in all examples that needed them.  Just using the
+signature auto-generating C<$^a> and C<$^b> would be more Perl 6 like.  But
+since we want to keep the documentation as close to the original as possible,
+it was decided to specifically specify the "-> $a, $b" signatures.
+
+Many functions take a C<&code> parameter of a C<Block> to be called by the
+function.  Many of these assume B<$_> will be set.  In Perl 6, this happens
+automagically if you create a block without a definite or implicit signature:
+
+  say { $_ == 4 }.signature;   # (;; $_? is raw)
+
+which indicates the Block takes an optional parameter that will be aliased
+as C<$_> inside the Block.
+
+Perl 6 also doesn't have a single C<undef> value, but instead has
+C<Type Objects>, which could be considered undef values, but with a type
+annotation.  In this module, C<Nil> (a special value denoting the absence
+of a value where there should have been one) is used instead of C<undef>.
+
+Also note there are no special parsing rules with regards to blocks in Perl 6.
+So a comma is B<always> required after having specified a block.
+
+The following functions are actually built-ins in Perl 6.
+
+  any all none minmax uniq zip
+
+They mostly provide the same or similar semantics, but there may be subtle
+differences, so it was decided to not just use the built-ins.  If these
+functions are imported from this library in a scope, they will used instead
+of the Perl 6 builtins.  The easiest way to use both the functions of this
+library and the Perl 6 builtins in the same scope, is to use the method syntax
+for the Perl 6 versions.
+
+    my @a = 42,5,2,98792,88;
+    {  # Note: imports in Perl 6 are always lexically scoped
+        use List::Util <minmax>;
+        say minmax @a;  # Ported Perl 5 version
+        say @a.minmax;  # Perl 6 version
+    }
+    say minmax @a;  # Perl 6 version again
+
+Many functions returns either C<True> or C<False>.  These are C<Bool>ean
+objects in Perl 6, rather than just C<0> or C<1>.  However, if you use
+a Boolean value in a numeric context, they are silently coerced to 0 and 1.
+So you can still use them in numeric calculations as if they are 0 and 1.
+
+=head1 FUNCTIONS
+
+=head2 Junctions
+
+=head3 I<Treatment of an empty list>
+
+There are two schools of thought for how to evaluate a junction on an
+empty list:
+
+=item Reduction to an identity (boolean)
+
+=item Result is undefined (three-valued)
+
+In the first case, the result of the junction applied to the empty list is
+determined by a mathematical reduction to an identity depending on whether
+the underlying comparison is "or" or "and".  Conceptually:
+
+                    "any are true"      "all are true"
+                    --------------      --------------
+    2 elements:     A || B || 0         A && B && 1
+    1 element:      A || 0              A && 1
+    0 elements:     0                   1
+
+In the second case, three-value logic is desired, in which a junction
+applied to an empty list returns C<Nil> rather than C<True> or C<False>.
+
+Junctions with a C<_u> suffix implement three-valued logic.  Those
+without are boolean.
+
+=head3 all BLOCK, LIST
+
+=head3 all_u BLOCK, LIST
+
+Returns True if all items in LIST meet the criterion given through
+BLOCK. Passes each element in LIST to the BLOCK in turn:
+
+  print "All values are non-negative"
+    if all { $_ >= 0 }, ($x, $y, $z);
+
+For an empty LIST, C<all> returns True (i.e. no values failed the condition)
+and C<all_u> returns C<Nil>.
+
+Thus, C<< all_u(@list) >> is equivalent to C<< @list ?? all(@list) !! Nil >>.
+
+B<Note>: because Perl treats C<Nil> as false, you must check the return value
+of C<all_u> with C<defined> or you will get the opposite result of what you
+expect.
+
+=head3 any BLOCK, LIST
+
+=head3 any_u BLOCK, LIST
+
+Returns True if any item in LIST meets the criterion given through
+BLOCK. Passes each element in LIST to the BLOCK in turn:
+
+  print "At least one non-negative value"
+    if any { $_ >= 0 }, ($x, $y, $z);
+
+For an empty LIST, C<any> returns False and C<any_u> returns C<Nil>.
+
+Thus, C<< any_u(@list) >> is equivalent to C<< @list ?? any(@list) !! undef >>.
+
+=head3 none BLOCK, LIST
+
+=head3 none_u BLOCK, LIST
+
+Logically the negation of C<any>. Returns True if no item in LIST meets
+the criterion given through BLOCK. Passes each element in LIST to the BLOCK
+in turn:
+
+  print "No non-negative values"
+    if none { $_ >= 0 }, ($x, $y, $z);
+
+For an empty LIST, C<none> returns True (i.e. no values failed the condition)
+and C<none_u> returns C<Nil>.
+
+Thus, C<< none_u(@list) >> is equivalent to C<< @list ?? none(@list) !! Nil >>.
+
+B<Note>: because Perl treats C<Nil> as false, you must check the return value
+of C<none_u> with C<defined> or you will get the opposite result of what you
+expect.
+
+=head3 notall BLOCK, LIST
+
+=head3 notall_u BLOCK, LIST
+
+Logically the negation of C<all>. Returns True if not all items in LIST meet
+the criterion given through BLOCK. Passes each element in LIST to the BLOCK
+in turn:
+
+  print "Not all values are non-negative"
+    if notall { $_ >= 0 }, ($x, $y, $z);
+
+For an empty LIST, C<notall> returns False and C<notall_u> returns C<Nil>.
+
+Thus, C<< notall_u(@list) >> is equivalent to C<< @list ?? notall(@list) !! Nil >>.
+
+=head3 one BLOCK LIST
+
+=head3 one_u BLOCK LIST
+
+Returns True if precisely one item in LIST meets the criterion given through
+BLOCK. Passes each element in LIST to the BLOCK in turn:
+
+    print "Precisely one value defined"
+        if one { defined($_) }, @list;
+
+Returns False otherwise.
+
+For an empty LIST, C<one> returns False and C<one_u> returns C<Nil>.
+
+The expression C<one BLOCK LIST> is almost equivalent to
+C<1 == True BLOCK LIST>, except for short-cutting.  Evaluation of BLOCK will
+immediately stop at the second true value seen.
 
 =head1 AUTHOR
 
@@ -503,7 +691,8 @@ Elizabeth Mattijsen <liz@wenzperl.nl>
 
 Copyright 2018 Elizabeth Mattijsen
 
-This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+This library is free software; you can redistribute it and/or modify it under
+the Artistic License 2.0.
 
 =end pod
 
