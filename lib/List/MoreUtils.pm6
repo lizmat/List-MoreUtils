@@ -1420,6 +1420,10 @@ Copyright 2018 Elizabeth Mattijsen
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.
 
+Re-imagined from the Perl 5 version as part of the CPAN Butterfly Plan. Perl 5
+version originally developed by Tassilo von Parseval, subsequently maintained
+by Adam Kennedy and Jens Rehsack.
+
 =end pod
 
 # vim: ft=perl6 expandtab sw=4
