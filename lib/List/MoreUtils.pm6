@@ -375,10 +375,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     our constant &minmaxstr is export(:all) = &minmax;
 
     sub REDUCE($result is copy, &code, @values) {
-        for @values.kv -> $_, $value {
-            $result = code($result,$value)
-        }
-        $result;
+        $result = code($result,$_) for @values;
     }
     our sub reduce_0(&code,@values) is export(:all) {
         REDUCE( 0, &code, @values )
@@ -1276,9 +1273,145 @@ of given BLOCK and LIST.
     my $er = equal_range { $_ <=> 2 }, @ids; # (1,3)
     my $er = equal_range { $_ <=> 4 }, @ids; # (9,13)
 
+=head2 Operations on sorted Lists
+
+=head3 binsert BLOCK, ITEM, LIST
+
+=head3 bsearch_insert BLOCK, ITEM, LIST
+
+Performs a binary search on LIST which must be a sorted list of values.
+BLOCK must return a negative value if the current element (passed as a
+parameter to the BLOCK) is smaller, a positive value if it is bigger and
+zero if it matches.
+
+ITEM is inserted at the index where the ITEM should be placed (based on above
+search). That means, it's inserted before the next bigger element.
+
+    my @l = 2,3,5,7;
+    binsert { $_ <=> 4 },  4, @l; # @l = (2,3,4,5,7)
+    binsert { $_ <=> 6 }, 42, @l; # @l = (2,3,4,5,42,7)
+
+You take care that the inserted element matches the compare result.
+
+C<bsearch_insert> is an alias for C<binsert>.
+
+=head3 bremove BLOCK, LIST
+
+=head3 bsearch_remove BLOCK, LIST
+
+Performs a binary search on LIST which must be a sorted list of values.
+BLOCK must return a negative value if the current element (passed as a
+parameter to the BLOCK) is smaller, a positive value if it is bigger and
+zero if it matches.
+
+The item at the found position is removed and returned.
+
+    my @l = 2,3,4,5,7;
+    bremove { $_ <=> 4 }, @l; # @l = (2,3,5,7);
+
+C<bsearch_remove> is an alias for C<bremove>.
+
+=head2 Counting and calculation
+
+=head3 true BLOCK, LIST
+
+Counts the number of elements in LIST for which the criterion in BLOCK is true.
+Passes each item in LIST to BLOCK in turn:
+
+    printf "%i item(s) are defined", true { defined($_) }, @list;
+
+=head3 false BLOCK, LIST
+
+Counts the number of elements in LIST for which the criterion in BLOCK is false.
+Passes each item in LIST to BLOCK in turn:
+
+    printf "%i item(s) are not defined", false { defined($_) }, @list;
+
+=head3 reduce_0 BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST.
+The first parameter contains the progressional result and is initialized
+with B<0>.  The second parameter contains the currently being processed
+element of LIST.
+
+    my $reduced = reduce_0 -> $a, $b { $a + $b }, @list;
+
+In the Perl 5 version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Perl 6 version for various reasons.
+Should you need the index value in your calculation, you can post-increment
+the anonymous state variable instead: C<$++>:
+
+    my $reduced = reduce_0 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_0 is B<summation> (addition of a sequence of numbers).
+
+=head3 reduce_1 BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST.
+The first parameter contains the progressional result and is initialized
+with B<1>.  The second parameter contains the currently being processed
+element of LIST.
+
+    my $reduced = reduce_1 -> $a, $b { $a * $b }, @list;
+
+In the Perl 5 version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Perl 6 version for various reasons.
+Should you need the index value in your calculation, you can post-increment
+the anonymous state variable instead: C<$++>:
+
+    my $reduced = reduce_1 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_1 is B<product> of a sequence of numbers.
+
+=head3 reduce_u BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST.
+The first parameter contains the progressional result and is initialized
+with B<()>.  The second parameter contains the currently being processed
+element of LIST.
+
+    my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
+
+In the Perl 5 version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Perl 6 version for various reasons.
+Should you need the index value in your calculation, you can post-increment
+the anonymous state variable instead: C<$++>:
+
+    my $reduced = reduce_u -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_u is to produce a list of numbers.
+
+=head3 minmax LIST
+
+Calculates the minimum and maximum of LIST and returns a two element list with
+the first element being the minimum and the second the maximum. Returns the
+empty list if LIST was empty.
+
+    my ($min,$max) = minmax (43,66,77,23,780); # (23,780)
+
+=head3 minmaxstr LIST
+
+Computes the minimum and maximum of LIST using string compare and returns a
+two element list with the first element being the minimum and the second the
+maximum. Returns the empty list if LIST was empty.
+
+    my ($min,$max) = minmax <foo bar baz zippo>; # <bar zippo>
+
+=head1 SEE ALSO
+
+L<List::Util>, L<List::AllUtils>, L<List::UtilsBy>
+
+=head1 THANKS
+
+Thanks to all of the individuals who have contributed to the Perl 5 version
+of this module.
+
 =head1 AUTHOR
 
 Elizabeth Mattijsen <liz@wenzperl.nl>
+
+Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments
+and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 

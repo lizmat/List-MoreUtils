@@ -669,10 +669,117 @@ Returns a list of indices containing the `lower_bound` and the `upper_bound` of 
     my $er = equal_range { $_ <=> 2 }, @ids; # (1,3)
     my $er = equal_range { $_ <=> 4 }, @ids; # (9,13)
 
+Operations on sorted Lists
+--------------------------
+
+### binsert BLOCK, ITEM, LIST
+
+### bsearch_insert BLOCK, ITEM, LIST
+
+Performs a binary search on LIST which must be a sorted list of values. BLOCK must return a negative value if the current element (passed as a parameter to the BLOCK) is smaller, a positive value if it is bigger and zero if it matches.
+
+ITEM is inserted at the index where the ITEM should be placed (based on above search). That means, it's inserted before the next bigger element.
+
+    my @l = 2,3,5,7;
+    binsert { $_ <=> 4 },  4, @l; # @l = (2,3,4,5,7)
+    binsert { $_ <=> 6 }, 42, @l; # @l = (2,3,4,5,42,7)
+
+You take care that the inserted element matches the compare result.
+
+`bsearch_insert` is an alias for `binsert`.
+
+### bremove BLOCK, LIST
+
+### bsearch_remove BLOCK, LIST
+
+Performs a binary search on LIST which must be a sorted list of values. BLOCK must return a negative value if the current element (passed as a parameter to the BLOCK) is smaller, a positive value if it is bigger and zero if it matches.
+
+The item at the found position is removed and returned.
+
+    my @l = 2,3,4,5,7;
+    bremove { $_ <=> 4 }, @l; # @l = (2,3,5,7);
+
+`bsearch_remove` is an alias for `bremove`.
+
+Counting and calculation
+------------------------
+
+### true BLOCK, LIST
+
+Counts the number of elements in LIST for which the criterion in BLOCK is true. Passes each item in LIST to BLOCK in turn:
+
+    printf "%i item(s) are defined", true { defined($_) }, @list;
+
+### false BLOCK, LIST
+
+Counts the number of elements in LIST for which the criterion in BLOCK is false. Passes each item in LIST to BLOCK in turn:
+
+    printf "%i item(s) are not defined", false { defined($_) }, @list;
+
+### reduce_0 BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST. The first parameter contains the progressional result and is initialized with **0**. The second parameter contains the currently being processed element of LIST.
+
+    my $reduced = reduce_0 -> $a, $b { $a + $b }, @list;
+
+In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+
+    my $reduced = reduce_0 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_0 is **summation** (addition of a sequence of numbers).
+
+### reduce_1 BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST. The first parameter contains the progressional result and is initialized with **1**. The second parameter contains the currently being processed element of LIST.
+
+    my $reduced = reduce_1 -> $a, $b { $a * $b }, @list;
+
+In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+
+    my $reduced = reduce_1 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_1 is **product** of a sequence of numbers.
+
+### reduce_u BLOCK, LIST
+
+Reduce LIST by calling BLOCK in scalar context for each element of LIST. The first parameter contains the progressional result and is initialized with **()**. The second parameter contains the currently being processed element of LIST.
+
+    my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
+
+In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+
+    my $reduced = reduce_u -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
+
+The idea behind reduce_u is to produce a list of numbers.
+
+### minmax LIST
+
+Calculates the minimum and maximum of LIST and returns a two element list with the first element being the minimum and the second the maximum. Returns the empty list if LIST was empty.
+
+    my ($min,$max) = minmax (43,66,77,23,780); # (23,780)
+
+### minmaxstr LIST
+
+Computes the minimum and maximum of LIST using string compare and returns a two element list with the first element being the minimum and the second the maximum. Returns the empty list if LIST was empty.
+
+    my ($min,$max) = minmax <foo bar baz zippo>; # <bar zippo>
+
+SEE ALSO
+========
+
+[List::Util](List::Util), [List::AllUtils](List::AllUtils), [List::UtilsBy](List::UtilsBy)
+
+THANKS
+======
+
+Thanks to all of the individuals who have contributed to the Perl 5 version of this module.
+
 AUTHOR
 ======
 
 Elizabeth Mattijsen <liz@wenzperl.nl>
+
+Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments and Pull Requests are welcome.
 
 COPYRIGHT AND LICENSE
 =====================
