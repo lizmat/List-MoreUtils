@@ -6,7 +6,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         False
     }
     our sub any_u(&code, @values --> Bool:D) is export(:all) {
-        any(&code,@values) || Nil
+        @values ?? any(&code,@values) !! Nil
     }
 
     our sub all(&code, @values --> Bool:D) is export(:all) {
@@ -14,7 +14,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         True
     }
     our sub all_u(&code, @values --> Bool:D) is export(:all) {
-        all(&code,@values) && Nil
+        @values ?? all(&code,@values) !! Nil
     }
 
     our sub none(&code, @values --> Bool:D) is export(:all) {
@@ -22,7 +22,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         True
     }
     our sub none_u(&code, @values --> Bool:D) is export(:all) {
-        none(&code,@values) && Nil
+        @values ?? none(&code,@values) !! Nil
     }
 
     our sub notall(&code, @values --> Bool:D) is export(:all) {
@@ -30,7 +30,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         False
     }
     our sub notall_u(&code, @values --> Bool:D) is export(:all) {
-        notall(&code,@values) || Nil
+        @values ?? notall(&code,@values) !! Nil
     }
 
     our sub one(&code, @values --> Bool:D) is export(:all) {
@@ -40,14 +40,14 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     }
     our sub one_u(&code, @values --> Bool:D) is export(:all) {
         my Int $seen;
-        return False unless code($_) && $seen++ for @values;
+        return Nil unless code($_) && $seen++ for @values;
         $seen ?? True !! Nil
     }
 
     our sub apply(&code, @values, :$scalar) is export(:all) {
         $scalar
-          ?? @values.map( -> $_ is copy { code($_) } ).tail
-          !! @values.map( -> $_ is copy { code($_) } ).List
+          ?? @values.map( -> $_ is copy { code($_); $_ } ).tail
+          !! @values.map( -> $_ is copy { code($_); $_ } ).List
     }
 
     our proto sub insert_after(|) is export(:all) {*}
@@ -469,8 +469,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
 
     our sub bremove(&code,@values) is export(:all) {
         my $lb = lower_bound(&code,@values);
-        @values.splice($lb, 1);
-        $lb
+        $lb == @values ?? Nil !! @values.splice($lb, 1)
     }
     our constant &bsearch_remove is export(:all) = &bremove;
 }
