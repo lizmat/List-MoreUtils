@@ -1,6 +1,6 @@
 use v6.c;
 use Test;
-use List::MoreUtils;
+use List::MoreUtils :all;
 
 my @supported = <
   after after_incl all all_u any any_u apply arrayify before before_incl
@@ -18,10 +18,8 @@ my @supported = <
 plan @supported * 2;
 
 for @supported {
-    ok !defined(::($_))                     # nothing here by that name
-      || ::($_) !=== List::MoreUtils::{$_}, # here, but not from List::MoreUtils
-      "is $_ NOT imported?";
-    ok defined(List::MoreUtils::{$_}), "is $_ externally accessible?";
+    ok defined(::($_)), "is $_ imported?";
+    ok defined(List::MoreUtils::{$_}), "is $_ still externally accessible?";
 }
 
 # vim: ft=perl6 expandtab sw=4

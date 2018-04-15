@@ -397,7 +397,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
             if $k >= $elems {
                 return $index
                   ?? -1
-                  !! $scalar ?? False !! ()
+                  !! $scalar ?? False !! []
             }
 
             if code(@values[$k]) -> $rc {
@@ -408,12 +408,12 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
             else {
                 return $index
                   ?? $k
-                  !! $scalar ?? True !! (@values[$k],)
+                  !! $scalar ?? True !! [@values[$k]]
             }
         }
         $index
           ?? -1
-          !! $scalar ?? False !! ()
+          !! $scalar ?? False !! []
     }
     our sub bsearchidx(&code,@values,:$scalar) is export(:all) {
         bsearch(&code,@values,:$scalar,:index)
