@@ -354,7 +354,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         my $elems = @arrays>>.elems.max;
         my $index = -1;
 
-        {
+        return {
             if $_ && $_ eq "index" {
                 $index
             }
