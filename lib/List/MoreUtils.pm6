@@ -188,10 +188,10 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         $scalar ?? +@duplicates !! @duplicates
     }
 
-    our sub frequency(@values) is export(:all) {
+    our sub frequency(@values, :$scalar) is export(:all) {
         my %seen;
         %seen{.defined ?? .Str !! .^name}++ for @values;
-        %seen
+        $scalar ?? %seen.elems !! %seen.kv.List
     }
 
     our sub occurrences(@values, :$scalar) is export(:all) {

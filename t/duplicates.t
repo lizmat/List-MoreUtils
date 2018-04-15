@@ -14,7 +14,7 @@ plan 6;
     is-deeply @u, @d, "duplicates of numbers";
 
     my $u = duplicates @a, :scalar;
-    is +@d, $u, "scalar result of duplicates of numbers";
+    is $u, +@d, "scalar result of duplicates of numbers";
 }
 
 # Test strings
@@ -26,7 +26,7 @@ plan 6;
     is-deeply @u, @d, "duplicates of strings";
 
     my $u = duplicates @a, :scalar;
-    is +@d, $u, "scalar result of duplicates of strings";
+    is $u, +@d, "scalar result of duplicates of strings";
 }
 
 # Test mixing strings and numbers
@@ -39,7 +39,7 @@ plan 6;
     is-deeply @u, @d, "duplicates of numbers/strings mixture";
 
     my $u = duplicates @a, :scalar;
-    is +@d, $u, "scalar result of duplicates of numbers/strings mixture";
+    is $u, +@d, "scalar result of duplicates of numbers/strings mixture";
 }
 
 # vim: ft=perl6 expandtab sw=4
