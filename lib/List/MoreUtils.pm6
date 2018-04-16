@@ -85,11 +85,9 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     }
 
     our sub pairwise(&code, @a, @b) is export(:all) {
-        my $i = -1;
+        my $elems = @a.elems max @b.elems;
         my @pairwise;
-        while ++$i < @a.elems && $i < @b.elems {
-            @pairwise.append(code(@a.AT-POS($i), @b.AT-POS($i)).Slip)
-        }
+        @pairwise.append(code(@a.AT-POS($_), @b.AT-POS($_)).Slip) for ^$elems;
         @pairwise
     }
 
