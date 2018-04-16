@@ -125,12 +125,15 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     our sub listcmp(**@arrays --> Hash:D) is export(:all) {
         my %result;
         for @arrays.kv -> $index, @array {
+            my %seen;
             for @array -> \value {
-                with %result{value} {
-                    .push($index)
-                }
-                else {
-                    %result.BIND-KEY(value,[$index]);
+                if value.defined {
+                    with %result{value} {
+                        .push($index) unless %seen{value}++;
+                    }
+                    else {
+                        %result.BIND-KEY(value,[$index]);
+                    }
                 }
             }
         }
@@ -204,15 +207,14 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     }
 
     our sub mode(@values, :$scalar) is export(:all) {
-        my %seen;
-        %seen{.defined ?? .Str !! .^name}++ for @values;
+        my $seen = @values.Bag;
+        my $max = $seen.values.max;
 
-        my $max = %seen.values.max;
         if $scalar {
             $max
         }
         else {
-            my @mode = %seen.map: .key if .value == $max;
+            my @mode = $seen.map: { .key if .value == $max };
             @mode.unshift($max)
         }
     }
@@ -369,8 +371,8 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
 
     our sub minmax(@values) is export(:all) {
         @values
-          ?? ()
-          !! (.min,.max) with @values.minmax
+          ?? ((.min,.max) with @values.minmax)
+          !! ()
     }
     our constant &minmaxstr is export(:all) = &minmax;
 
