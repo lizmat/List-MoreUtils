@@ -1,6 +1,6 @@
 use v6.c;
 
-class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
+class List::MoreUtils:ver<0.0.2>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -1396,7 +1396,7 @@ Computes the minimum and maximum of LIST using string compare and returns a
 two element list with the first element being the minimum and the second the
 maximum. Returns the empty list if LIST was empty.
 
-    my ($min,$max) = minmax <foo bar baz zippo>; # <bar zippo>
+    my ($min,$max) = minmaxstr <foo bar baz zippo>; # <bar zippo>
 
 =head1 SEE ALSO
 
