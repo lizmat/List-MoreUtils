@@ -54,7 +54,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     multi sub insert_after(&code, \insertee, @values --> Nil) {
         for @values.kv -> $key, $value {
             if code($value) {
-                @values.splice($key + 1, 1, insertee);
+                @values.splice($key + 1, 0, insertee);
                 return
             }
         }
@@ -72,7 +72,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     multi sub insert_after_string(Str() $string, \insertee, @values --> Nil) {
         for @values.kv -> $key, $value {
             if $value.defined && $value eq $string {
-                @values.splice($key + 1, 1, insertee);
+                @values.splice($key + 1, 0, insertee);
                 return
             }
         }
