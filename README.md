@@ -742,7 +742,7 @@ The idea behind reduce_1 is **product** of a sequence of numbers.
 
 ### reduce_u BLOCK, LIST
 
-Reduce LIST by calling BLOCK in scalar context for each element of LIST. The first parameter contains the progressional result and is initialized with **()**. The second parameter contains the currently being processed element of LIST.
+Reduce LIST by calling BLOCK in scalar context for each element of LIST. The first parameter contains the progressional result and is initialized with **Any**. The second parameter contains the currently being processed element of LIST.
 
     my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
 

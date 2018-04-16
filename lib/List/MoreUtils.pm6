@@ -377,6 +377,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
 
     sub REDUCE($result is copy, &code, @values) {
         $result = code($result,$_) for @values;
+        $result
     }
     our sub reduce_0(&code,@values) is export(:all) {
         REDUCE( 0, &code, @values )
@@ -385,7 +386,7 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
         REDUCE( 1, &code, @values )
     }
     our sub reduce_u(&code,@values) is export(:all) {
-        REDUCE( (), &code, @values )
+        REDUCE( Any, &code, @values )
     }
 
     our sub bsearch(&code,@values,:$index,:$scalar) is export(:all) {
@@ -1367,7 +1368,7 @@ The idea behind reduce_1 is B<product> of a sequence of numbers.
 
 Reduce LIST by calling BLOCK in scalar context for each element of LIST.
 The first parameter contains the progressional result and is initialized
-with B<()>.  The second parameter contains the currently being processed
+with B<Any>.  The second parameter contains the currently being processed
 element of LIST.
 
     my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
