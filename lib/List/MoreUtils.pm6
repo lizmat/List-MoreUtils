@@ -35,13 +35,11 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
 
     our sub one(&code, @values --> Bool:D) is export(:all) {
         my Int $seen = 0;
-        return False unless code($_) && $seen++ for @values;
+        return False if code($_) && $seen++ for @values;
         so $seen
     }
     our sub one_u(&code, @values --> Bool:D) is export(:all) {
-        my Int $seen;
-        return Nil unless code($_) && $seen++ for @values;
-        $seen ?? True !! Nil
+        @values ?? one(&code,@values) !! Nil
     }
 
     our sub apply(&code, @values, :$scalar) is export(:all) {
@@ -198,11 +196,9 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     }
 
     our sub occurrences(@values, :$scalar) is export(:all) {
-        my %seen;
-        %seen{.defined ?? .Str !! .^name}++ for @values;
-
+        my $seen = @values.Bag;
         my @occurrences;
-        @occurrences[.value].push(.key) for %seen;
+        @occurrences[.value].push(.key) for $seen.pairs;
         $scalar ?? +@occurrences !! @occurrences
     }
 
@@ -251,7 +247,12 @@ class List::MoreUtils:ver<0.0.1>:auth<cpan:ELIZABETH> {
     }
 
     our sub natatime($n, @values) is export(:all) {
-        @values.rotor($n, :partial).List
+        my $iterator := @values.rotor($n, :partial).iterator;
+        return {
+            (my $pulled := $iterator.pull-one) =:= IterationEnd
+              ?? ()
+              !! $pulled
+        }
     }
 
     our sub firstval(&code, @values) is export(:all) {
