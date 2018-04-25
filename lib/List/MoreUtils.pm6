@@ -1,6 +1,6 @@
 use v6.c;
 
-class List::MoreUtils:ver<0.0.3>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
