@@ -1,9 +1,9 @@
 use v6.c;
-
-use List::MoreUtils <apply>;
 use Test;
+use List::MoreUtils <apply>;
+%*ENV<RAKUDO_NO_DEPRECATIONS> = True;
 
-plan 5;
+plan 6;
 
 my @list = 0 .. 9;
 my @list1 = apply { $_++ }, @list;
@@ -17,6 +17,8 @@ is-deeply @list,  [" foo ", " bar ", "     ", "foobar"],
 is-deeply @list1, ["foo",   "bar",   "",      "foobar"],
   "returned strings stripped";
 
+my $ITEM = apply Scalar, { s:g/^ \s+ | \s+ $// }, @list;
+is $ITEM, "foobar", ":scalar returns last item";
 my $item = apply { s:g/^ \s+ | \s+ $// }, @list, :scalar;
 is $item, "foobar", ":scalar returns last item";
 

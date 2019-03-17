@@ -65,7 +65,7 @@ They mostly provide the same or similar semantics, but there may be subtle diffe
 
 Many functions returns either `True` or `False`. These are `Bool`ean objects in Perl 6, rather than just `0` or `1`. However, if you use a Boolean value in a numeric context, they are silently coerced to 0 and 1. So you can still use them in numeric calculations as if they are 0 and 1.
 
-Some functions return something different in scalar context than in list context. Perl 6 doesn't have those concepts. Functions that are supposed to return something different in scalar context also accept a `:scalar` named parameter to indicate a scalar context result is required. This will be noted with the function in question if that feature is available.
+Some functions return something different in scalar context than in list context. Perl 6 doesn't have those concepts. Functions that are supposed to return something different in scalar context also the `Scalar` type as the first positional parameter to indicate the result like the result of a scalar context, is required. It will be noted with the function in question if that feature is available.
 
 FUNCTIONS
 =========
@@ -210,7 +210,7 @@ Transformation
 
 ### apply BLOCK, LIST
 
-Applies BLOCK to each item in LIST and returns a list of the values after BLOCK has been applied. Returns the last element if `:scalar` has been specified. This function is similar to `map` but will not modify the elements of the input list:
+Applies BLOCK to each item in LIST and returns a list of the values after BLOCK has been applied. Returns the last element if `Scalar` has been specified. This function is similar to `map` but will not modify the elements of the input list:
 
     my @list = 1 .. 4;
     my @mult = apply { $_ *= 2 }, @list;
@@ -220,10 +220,10 @@ Applies BLOCK to each item in LIST and returns a list of the values after BLOCK 
     @list = 1 2 3 4
     @mult = 2 4 6 8
 
-With the `:scalar` named parameter:
+With the `Scalar` positional parameter:
 
     my @list = 1 .. 4;
-    my $last = apply { $_ *= 2 }, @list, :scalar;
+    my $last = apply Scalar, { $_ *= 2 }, @list;
     print "@list = @list[]\n";
     print "\$last = $last\n";
     =====================================
@@ -357,10 +357,10 @@ Returns a list costisting of each element of the given arrays. Recursive arrays 
 
 ### distinct LIST
 
-Returns a new list by stripping duplicate values in LIST by comparing the values as hash keys, except that type objects are considered separate from ''. The order of elements in the returned list is the same as in LIST. Returns the number of unique elements in LIST if the `:scalar` named parameter has been specified.
+Returns a new list by stripping duplicate values in LIST by comparing the values as hash keys, except that type objects are considered separate from ''. The order of elements in the returned list is the same as in LIST. Returns the number of unique elements in LIST if the `Scalar` positional parameter has been specified.
 
-    my @x = uniq (1, 1, 2, 2, 3, 5, 3, 4);           # returns (1,2,3,5,4)
-    my $x = uniq (1, 1, 2, 2, 3, 5, 3, 4), :$scalar; # returns 5
+    my @x = uniq (1, 1, 2, 2, 3, 5, 3, 4);          # returns (1,2,3,5,4)
+    my $x = uniq Scalar, (1, 1, 2, 2, 3, 5, 3, 4);  # returns 5
 
     my @n = distinct "Mike", "Michael", "Richard", "Rick", "Michael", "Rick"
     # ("Mike", "Michael", "Richard", "Rick")
@@ -380,17 +380,17 @@ Returns a new list by stripping duplicate values in LIST by comparing the values
 
 ### singleton LIST
 
-Returns a new list by stripping values in LIST occurring only once by comparing the values as hash keys, except that type objects are considered separate from ''. The order of elements in the returned list is the same as in LIST. Returns the number of elements occurring only once in LIST if the `:scalar` named parameter has been specified.
+Returns a new list by stripping values in LIST occurring only once by comparing the values as hash keys, except that type objects are considered separate from ''. The order of elements in the returned list is the same as in LIST. Returns the number of elements occurring only once in LIST if the `Scalar` positional parameter has been specified.
 
     my @x = singleton (1,1,4,2,2,3,3,5);          # returns (4,5)
-    my $n = singleton (1,1,4,2,2,3,3,5), :scalar; # returns 2
+    my $n = singleton Scalar, (1,1,4,2,2,3,3,5);  # returns 2
 
 ### duplicates LIST
 
 Returns a new list by stripping values in LIST occuring more than once by comparing the values as hash keys, except that type objects are considered separate from ''. The order of elements in the returned list is the same as in LIST. Returns the number of elements occurring more than once in LIST.
 
     my @y = duplicates (1,1,2,4,7,2,3,4,6,9);          # returns (1,2,4)
-    my $n = duplicates (1,1,2,4,7,2,3,4,6,9), :scalar; # returns 3
+    my $n = duplicates Scalar, (1,1,2,4,7,2,3,4,6,9);  # returns 3
 
 #### Idiomatic Perl 6 ways
 
@@ -419,11 +419,11 @@ Returns a new list of frequencies and the corresponding values from LIST.
 
 ### mode LIST
 
-Returns the modal value of LIST. Returns the modal value only if the `:scalar` name parameter is specified. Otherwise all probes occuring *modal* times are returned as well.
+Returns the modal value of LIST. Returns the modal value only if the `Scalar` positional parameter is specified. Otherwise all probes occuring *modal* times are returned as well.
 
     my @m = mode (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7);
     #  (7, 4, 6)
-    my $mode = mode (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7), :scalar;
+    my $mode = mode Scalar, (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7);
     #  7
 
 Partitioning
@@ -766,15 +766,15 @@ Searching in sorted Lists
 
 Performs a binary search on LIST which must be a sorted list of values. BLOCK receives each element in turn and must return a negative value if the element is smaller, a positive value if it is bigger and zero if it matches.
 
-Returns a boolean value if the `:scalar` named parameter is specified. Otherwise it returns a single element list if it was found, or the empty list if none of the calls to BLOCK returned `0`.
+Returns a boolean value if the `Scalar` named parameter is specified. Otherwise it returns a single element list if it was found, or the empty list if none of the calls to BLOCK returned `0`.
 
     my @list  = <alpha beta cicero delta>;
     my @found = bsearch { $_ cmp "cicero" }, @list;   # ("cicero",)
     my @found = bsearch { $_ cmp "effort" }, @list;   # ()
 
     my @list  = <alpha beta cicero delta>;
-    my $found = bsearch { $_ cmp "cicero" }, @list, :scalar;   # True
-    my $found = bsearch { $_ cmp "effort" }, @list, :scalar;   # False
+    my $found = bsearch Scalar, { $_ cmp "cicero" }, @list;   # True
+    my $found = bsearch Scalar, { $_ cmp "effort" }, @list;   # False
 
 ### bsearchidx BLOCK, LIST
 
@@ -947,7 +947,7 @@ Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments an
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2018 Elizabeth Mattijsen
+Copyright 2018-2019 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

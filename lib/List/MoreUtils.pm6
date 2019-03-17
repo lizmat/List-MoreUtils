@@ -1,6 +1,6 @@
 use v6.c;
 
-module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.5>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -42,10 +42,20 @@ module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
         @values ?? one(&code,@values) !! Nil
     }
 
-    our sub apply(&code, @values, :$scalar) is export(:all) {
-        $scalar
-          ?? @values.map( -> $_ is copy { code($_); $_ } ).tail
-          !! @values.map( -> $_ is copy { code($_); $_ } ).List
+    our proto sub apply(|) is export(:all) {*}
+    multi sub apply(Scalar:U, &code, @values) {
+        _apply(&code, @values).tail
+    }
+    multi sub apply(&code, @values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _apply(&code, @values).tail
+    }
+    multi sub apply(&code, @values) {
+        _apply(&code, @values).List
+    }
+    sub _apply(&code, @values) {
+        @values.map( -> $_ is copy { code($_); $_ } )
     }
 
     our proto sub insert_after(|) is export(:all) {*}
@@ -145,16 +155,37 @@ module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
         @arrayify
     }
 
-    our sub uniq(@values, :$scalar) is export(:all) {
+    our proto sub uniq(|) is export(:all) {*}
+    multi sub uniq(Scalar:U, @values) { _count_uniq(@values) }
+    multi sub uniq(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _count_uniq(@values)
+    }
+    multi sub uniq(@values) { _uniq(@values) }
+    sub _count_uniq(@values) {
+        my %seen;
+        my Int $unique = 0;
+        ++$unique unless %seen{.defined ?? .Str !! .^name}++ for @values;
+        $unique
+    }
+    sub _uniq(@values) {
         my %seen;
         my @uniq;
-
         @uniq.push($_) unless %seen{.defined ?? .Str !! .^name}++ for @values;
-        $scalar ?? +@uniq !! @uniq
+        @uniq
     }
     our constant &distinct is export(:all) = &uniq;
 
-    our sub singleton(@values is copy, :$scalar) is export(:all) {
+    our proto sub singleton(|) is export(:all) {*}
+    multi sub singleton(Scalar:U, @values) { _singleton(@values).elems }
+    multi sub singleton(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _singleton(@values).elems
+    }
+    multi sub singleton(@values) { _singleton(@values).List }
+    sub _singleton(@values is copy) {
         my %once;
         my %duplicates;
 
@@ -172,45 +203,70 @@ module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
                 %once{$key} = $index
             }
         }
-
-        $scalar
-          ?? (@values[]:v).elems
-          !! (@values[]:v).List
+        @values[]:v
     }
 
-    our sub duplicates(@values, :$scalar) is export(:all) {
+    our proto sub duplicates(|) is export(:all) {*}
+    multi sub duplicates(Scalar:U, @values) { _count_duplicates(@values) }
+    multi sub duplicates(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _count_duplicates(@values)
+    }
+    multi sub duplicates(@values) { _duplicates(@values) }
+    sub _count_duplicates(@values) {
+        my %seen;
+        my Int $duplicates = 0;
+        ++$duplicates if %seen{.defined ?? .Str !! .^name}++ == 1 for @values;
+        $duplicates
+    }
+    sub _duplicates(@values) {
         my %seen;
         my @duplicates;
-
         @duplicates.push($_) if %seen{.defined ?? .Str !! .^name}++ == 1
           for @values;
-        $scalar ?? +@duplicates !! @duplicates
+        @duplicates
     }
 
-    our sub frequency(@values, :$scalar) is export(:all) {
+    our proto sub frequency(|) is export(:all) {*}
+    multi sub frequency(Scalar:U, @values) { _frequency(@values).elems }
+    multi sub frequency(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _frequency(@values).elems
+    }
+    multi sub frequency(@values) { _frequency(@values).kv.List }
+    sub _frequency(@values) {
         my %seen;
         %seen{.defined ?? .Str !! .^name}++ for @values;
-        $scalar ?? %seen.elems !! %seen.kv.List
+        %seen
     }
 
-    our sub occurrences(@values, :$scalar) is export(:all) {
-        my $seen = @values.Bag;
+    our proto sub occurrences(|) is export(:all) {*}
+    multi sub occurrences(Scalar:U, @values) { occurrences(@values).elems }
+    multi sub occurrences(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        occurrences(@values).elems
+    }
+    multi sub occurrences(@values) {
         my @occurrences;
-        @occurrences[.value].push(.key) for $seen.pairs;
-        $scalar ?? +@occurrences !! @occurrences
+        @occurrences[.value].push(.key) for @values.Bag.pairs;
+        @occurrences
     }
 
-    our sub mode(@values, :$scalar) is export(:all) {
+    our proto sub mode(|) is export(:all) {*}
+    multi sub mode(Scalar:U, @values) { @values.Bag.values.max }
+    multi sub mode(@values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        @values.Bag.values.max
+    }
+    multi sub mode(@values) {
         my $seen = @values.Bag;
-        my $max = $seen.values.max;
-
-        if $scalar {
-            $max
-        }
-        else {
-            my @mode = $seen.map: { .key if .value == $max };
-            @mode.unshift($max)
-        }
+        my $max  = $seen.values.max;
+        my @mode = $seen.map: { .key if .value == $max };
+        @mode.unshift($max)
     }
 
     our sub after(&code, @values) is export(:all) {
@@ -389,8 +445,20 @@ module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
         REDUCE( Any, &code, @values )
     }
 
-    our sub bsearch(&code,@values,:$index,:$scalar) is export(:all) {
-        my $elems = +@values;
+    our proto sub bsearch(|) is export(:all) {*}
+    multi sub bsearch(Scalar:U, &code, @values) {
+        _bsearch(&code, @values, False, True)
+    }
+    multi sub bsearch(&code, @values, :$scalar!)
+      is DEPRECATED('Scalar as first positional')
+    {
+        _bsearch(&code, @values, False, True)
+    }
+    multi sub bsearch(&code, @values) {
+        _bsearch(&code, @values, False)
+    }
+    sub _bsearch(&code, @values, $index, $scalar?) {
+        my $elems = @values.elems;
         my $i = 0;
         my $j = $elems;
 
@@ -417,8 +485,8 @@ module List::MoreUtils:ver<0.0.4>:auth<cpan:ELIZABETH> {
           ?? -1
           !! $scalar ?? False !! []
     }
-    our sub bsearchidx(&code,@values,:$scalar) is export(:all) {
-        bsearch(&code,@values,:$scalar,:index)
+    our sub bsearchidx(&code, @values) is export(:all) {
+        _bsearch(&code, @values, True)
     }
     our constant &bsearch_index is export(:all) = &bsearchidx;
 
@@ -580,9 +648,10 @@ So you can still use them in numeric calculations as if they are 0 and 1.
 
 Some functions return something different in scalar context than in list
 context.  Perl 6 doesn't have those concepts.  Functions that are supposed
-to return something different in scalar context also accept a C<:scalar>
-named parameter to indicate a scalar context result is required.  This will
-be noted with the function in question if that feature is available.
+to return something different in scalar context also the C<Scalar> type as
+the first positional parameter to indicate the result like the result of a
+scalar context, is required. It will be noted with the function in question
+if that feature is available.
 
 =head1 FUNCTIONS
 
@@ -744,7 +813,7 @@ immediately stop at the second true value seen.
 =head3 apply BLOCK, LIST
 
 Applies BLOCK to each item in LIST and returns a list of the values after
-BLOCK has been applied. Returns the last element if C<:scalar> has been
+BLOCK has been applied. Returns the last element if C<Scalar> has been
 specified.  This function is similar to C<map> but will not modify the
 elements of the input list:
 
@@ -756,10 +825,10 @@ elements of the input list:
     @list = 1 2 3 4
     @mult = 2 4 6 8
 
-With the C<:scalar> named parameter:
+With the C<Scalar> positional parameter:
 
     my @list = 1 .. 4;
-    my $last = apply { $_ *= 2 }, @list, :scalar;
+    my $last = apply Scalar, { $_ *= 2 }, @list;
     print "@list = @list[]\n";
     print "\$last = $last\n";
     =====================================
@@ -904,11 +973,11 @@ are flattened, too.
 Returns a new list by stripping duplicate values in LIST by comparing
 the values as hash keys, except that type objects are considered separate
 from ''.  The order of elements in the returned list is the same as in LIST.
-Returns the number of unique elements in LIST if the C<:scalar> named parameter
-has been specified.
+Returns the number of unique elements in LIST if the C<Scalar> positional
+parameter has been specified.
 
-    my @x = uniq (1, 1, 2, 2, 3, 5, 3, 4);           # returns (1,2,3,5,4)
-    my $x = uniq (1, 1, 2, 2, 3, 5, 3, 4), :$scalar; # returns 5
+    my @x = uniq (1, 1, 2, 2, 3, 5, 3, 4);          # returns (1,2,3,5,4)
+    my $x = uniq Scalar, (1, 1, 2, 2, 3, 5, 3, 4);  # returns 5
 
     my @n = distinct "Mike", "Michael", "Richard", "Rick", "Michael", "Rick"
     # ("Mike", "Michael", "Richard", "Rick")
@@ -932,10 +1001,10 @@ Returns a new list by stripping values in LIST occurring only once by
 comparing the values as hash keys, except that type objects are considered
 separate from ''.  The order of elements in the returned list is the same
 as in LIST.  Returns the number of elements occurring only once in LIST
-if the C<:scalar> named parameter has been specified.
+if the C<Scalar> positional parameter has been specified.
 
     my @x = singleton (1,1,4,2,2,3,3,5);          # returns (4,5)
-    my $n = singleton (1,1,4,2,2,3,3,5), :scalar; # returns 2
+    my $n = singleton Scalar, (1,1,4,2,2,3,3,5);  # returns 2
 
 =head3 duplicates LIST
 
@@ -945,7 +1014,7 @@ separate from ''.  The order of elements in the returned list is the same
 as in LIST.  Returns the number of elements occurring more than once in LIST.
 
     my @y = duplicates (1,1,2,4,7,2,3,4,6,9);          # returns (1,2,4)
-    my $n = duplicates (1,1,2,4,7,2,3,4,6,9), :scalar; # returns 3
+    my $n = duplicates Scalar, (1,1,2,4,7,2,3,4,6,9);  # returns 3
 
 =head4 Idiomatic Perl 6 ways
 
@@ -975,12 +1044,12 @@ Returns a new list of frequencies and the corresponding values from LIST.
 =head3 mode LIST
 
 Returns the modal value of LIST. Returns the modal value only if the
-C<:scalar> name parameter is specified.  Otherwise all probes occuring
+C<Scalar> positional parameter is specified.  Otherwise all probes occuring
 I<modal> times are returned as well.
 
     my @m = mode (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7);
     #  (7, 4, 6)
-    my $mode = mode (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7), :scalar;
+    my $mode = mode Scalar, (1 xx 3, 2 xx 4, 3 xx 2, 4 xx 7, 5 xx 2, 6 xx 7);
     #  7
 
 =head2 Partitioning
@@ -1362,7 +1431,7 @@ Performs a binary search on LIST which must be a sorted list of values.
 BLOCK receives each element in turn and must return a negative value if the
 element is smaller, a positive value if it is bigger and zero if it matches.
 
-Returns a boolean value if the C<:scalar> named parameter is specified.
+Returns a boolean value if the C<Scalar> named parameter is specified.
 Otherwise it returns a single element list if it was found, or the empty list
 if none of the calls to BLOCK returned C<0>.
 
@@ -1371,8 +1440,8 @@ if none of the calls to BLOCK returned C<0>.
     my @found = bsearch { $_ cmp "effort" }, @list;   # ()
 
     my @list  = <alpha beta cicero delta>;
-    my $found = bsearch { $_ cmp "cicero" }, @list, :scalar;   # True
-    my $found = bsearch { $_ cmp "effort" }, @list, :scalar;   # False
+    my $found = bsearch Scalar, { $_ cmp "cicero" }, @list;   # True
+    my $found = bsearch Scalar, { $_ cmp "effort" }, @list;   # False
 
 =head3 bsearchidx BLOCK, LIST
 
@@ -1579,7 +1648,7 @@ and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2018 Elizabeth Mattijsen
+Copyright 2018-2019 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.

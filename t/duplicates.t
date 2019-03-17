@@ -1,9 +1,9 @@
 use v6.c;
-
-use List::MoreUtils <duplicates>;
 use Test;
+use List::MoreUtils <duplicates>;
+%*ENV<RAKUDO_NO_DEPRECATIONS> = True;
 
-plan 6;
+plan 9;
 
 # Test numbers
 {
@@ -13,6 +13,8 @@ plan 6;
     my @u = duplicates @a;
     is-deeply @u, @d, "duplicates of numbers";
 
+    my $U = duplicates Scalar, @a;
+    is $U, +@d, "scalar result of duplicates of numbers";
     my $u = duplicates @a, :scalar;
     is $u, +@d, "scalar result of duplicates of numbers";
 }
@@ -25,6 +27,8 @@ plan 6;
     my @u = duplicates @a;
     is-deeply @u, @d, "duplicates of strings";
 
+    my $U = duplicates Scalar, @a;
+    is $U, +@d, "scalar result of duplicates of strings";
     my $u = duplicates @a, :scalar;
     is $u, +@d, "scalar result of duplicates of strings";
 }
@@ -38,6 +42,8 @@ plan 6;
     my @u = duplicates @a;
     is-deeply @u, @d, "duplicates of numbers/strings mixture";
 
+    my $U = duplicates Scalar, @a;
+    is $U, +@d, "scalar result of duplicates of numbers/strings mixture";
     my $u = duplicates @a, :scalar;
     is $u, +@d, "scalar result of duplicates of numbers/strings mixture";
 }

@@ -1,9 +1,9 @@
 use v6.c;
-
-use List::MoreUtils <singleton>;
 use Test;
+use List::MoreUtils <singleton>;
+%*ENV<RAKUDO_NO_DEPRECATIONS> = True;
 
-plan 6;
+plan 9;
 
 {
     my @s = 1001 .. 1200;
@@ -11,6 +11,7 @@ plan 6;
     my @a = |@d, |@s;
     my @u = singleton @a;
     is-deeply @u, @s, "1001 .. 1200 only occur once";
+    is singleton( Scalar, @a), 200, 'we got 200 values occurring once';
     is singleton( @a, :scalar), 200, 'we got 200 values occurring once';
 }
 
@@ -20,6 +21,7 @@ plan 6;
     my @a = |@d, |@s;
     my @u = singleton @a;
     is-deeply @u, @s, "AA .. ZZ only occur once";
+    is singleton( Scalar, @a), 676, 'we got 676 values occurring once';
     is singleton( @a, :scalar), 676, 'we got 676 values occurring once';
 }
 
@@ -30,6 +32,7 @@ plan 6;
 
     my @u  = singleton @a;
     is-deeply @u, @s, "1001 .. 1200, AA .. ZZ only occur once";
+    is singleton( Scalar, @a), 200 + 676, 'we got 200 + 676 values occurring once';
     is singleton( @a, :scalar), 200 + 676, 'we got 200 + 676 values occurring once';
 }
 

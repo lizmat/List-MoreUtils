@@ -1,9 +1,9 @@
 use v6.c;
-
-use List::MoreUtils <frequency>;
 use Test;
+use List::MoreUtils <frequency>;
+%*ENV<RAKUDO_NO_DEPRECATIONS> = True;
 
-plan 5107;
+plan 5110;
 
 # Test numbers
 {
@@ -17,6 +17,8 @@ plan 5107;
         is %f{$_}, $b{$_}, "does int $_ have the right frequency";
     }
 
+    my $U = frequency Scalar, @a;
+    is $U, @s + @d, "scalar result of frequency of numbers";
     my $u = frequency @a, :scalar;
     is $u, @s + @d, "scalar result of frequency of numbers";
 }
@@ -33,6 +35,8 @@ plan 5107;
         is %f{$_}, $b{$_}, "does str $_ have the right frequency";
     }
 
+    my $U = frequency Scalar, @a;
+    is $U, @s + @d, "scalar result of frequency of strings";
     my $u = frequency @a, :scalar;
     is $u, @s + @d, "scalar result of frequency of strings";
 }
@@ -49,6 +53,8 @@ plan 5107;
         is %f{$_}, $b{$_}, "does mixed $_ have the right frequency";
     }
 
+    my $U = frequency Scalar, @a;
+    is $U, @s + @d, "scalar result of frequency of numbers/strings mixture";
     my $u = frequency @a, :scalar;
     is $u, @s + @d, "scalar result of frequency of numbers/strings mixture";
 }
