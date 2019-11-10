@@ -1,6 +1,6 @@
 use v6.c;
 
-module List::MoreUtils:ver<0.0.5>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.6>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -563,7 +563,7 @@ sub EXPORT(*@args, *%_) {
 
 =head1 NAME
 
-List::MoreUtils - Port of Perl 5's List::MoreUtils 0.428
+List::MoreUtils - Port of Perl's List::MoreUtils 0.428
 
 =head1 SYNOPSIS
 
@@ -593,20 +593,20 @@ tag. Otherwise functions can be imported by name as usual:
 
 =head1 Porting Caveats
 
-Perl 6 does not have the concept of C<scalar> and C<list> context.  Usually,
+Raku does not have the concept of C<scalar> and C<list> context.  Usually,
 the effect of a scalar context can be achieved by prefixing C<+> to the
 result, which would effectively return the number of elements in the result,
-which usually is the same as the scalar context of Perl 5 of these functions.
+which usually is the same as the scalar context of Perl of these functions.
 
-Perl 6 does not have a magic C<$a> and C<$b>.  But they can be made to exist
+Raku does not have a magic C<$a> and C<$b>.  But they can be made to exist
 by specifying the correct signature to blocks, specifically "-> $a, $b".
 These have been used in all examples that needed them.  Just using the
-signature auto-generating C<$^a> and C<$^b> would be more Perl 6 like.  But
+signature auto-generating C<$^a> and C<$^b> would be more Raku like.  But
 since we want to keep the documentation as close to the original as possible,
 it was decided to specifically specify the "-> $a, $b" signatures.
 
 Many functions take a C<&code> parameter of a C<Block> to be called by the
-function.  Many of these assume B<$_> will be set.  In Perl 6, this happens
+function.  Many of these assume B<$_> will be set.  In Raku, this happens
 automagically if you create a block without a definite or implicit signature:
 
   say { $_ == 4 }.signature;   # (;; $_? is raw)
@@ -614,40 +614,40 @@ automagically if you create a block without a definite or implicit signature:
 which indicates the Block takes an optional parameter that will be aliased
 as C<$_> inside the Block.
 
-Perl 6 also doesn't have a single C<undef> value, but instead has
+Raku also doesn't have a single C<undef> value, but instead has
 C<Type Objects>, which could be considered undef values, but with a type
 annotation.  In this module, C<Nil> (a special value denoting the absence
 of a value where there should have been one) is used instead of C<undef>.
 
-Also note there are no special parsing rules with regards to blocks in Perl 6.
+Also note there are no special parsing rules with regards to blocks in Raku.
 So a comma is B<always> required after having specified a block.
 
-The following functions are actually built-ins in Perl 6.
+The following functions are actually built-ins in Raku.
 
   any all none minmax uniq zip
 
 They mostly provide the same or similar semantics, but there may be subtle
 differences, so it was decided to not just use the built-ins.  If these
 functions are imported from this library in a scope, they will used instead
-of the Perl 6 builtins.  The easiest way to use both the functions of this
-library and the Perl 6 builtins in the same scope, is to use the method syntax
-for the Perl 6 versions.
+of the Raku builtins.  The easiest way to use both the functions of this
+library and the Raku builtins in the same scope, is to use the method syntax
+for the Raku versions.
 
     my @a = 42,5,2,98792,88;
-    {  # Note: imports in Perl 6 are always lexically scoped
+    {  # Note: imports in Raku are always lexically scoped
         use List::Util <minmax>;
-        say minmax @a;  # Ported Perl 5 version
-        say @a.minmax;  # Perl 6 version
+        say minmax @a;  # Ported Perl version
+        say @a.minmax;  # Raku version
     }
-    say minmax @a;  # Perl 6 version again
+    say minmax @a;  # Raku version again
 
 Many functions returns either C<True> or C<False>.  These are C<Bool>ean
-objects in Perl 6, rather than just C<0> or C<1>.  However, if you use
+objects in Raku, rather than just C<0> or C<1>.  However, if you use
 a Boolean value in a numeric context, they are silently coerced to 0 and 1.
 So you can still use them in numeric calculations as if they are 0 and 1.
 
 Some functions return something different in scalar context than in list
-context.  Perl 6 doesn't have those concepts.  Functions that are supposed
+context.  Raku doesn't have those concepts.  Functions that are supposed
 to return something different in scalar context also the C<Scalar> type as
 the first positional parameter to indicate the result like the result of a
 scalar context, is required. It will be noted with the function in question
@@ -697,11 +697,11 @@ and C<all_u> returns C<Nil>.
 
 Thus, C<< all_u(@list) >> is equivalent to C<< @list ?? all(@list) !! Nil >>.
 
-B<Note>: because Perl treats C<Nil> as false, you must check the return value
+B<Note>: because Raku treats C<Nil> as false, you must check the return value
 of C<all_u> with C<defined> or you will get the opposite result of what you
 expect.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say "All values are non-negative"
       if $x & $y & $z >= 0;
@@ -723,7 +723,7 @@ For an empty LIST, C<any> returns False and C<any_u> returns C<Nil>.
 
 Thus, C<< any_u(@list) >> is equivalent to C<< @list ?? any(@list) !! undef >>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say "At least one non-negative value"
       if $x | $y | $z >= 0;
@@ -747,11 +747,11 @@ and C<none_u> returns C<Nil>.
 
 Thus, C<< none_u(@list) >> is equivalent to C<< @list ?? none(@list) !! Nil >>.
 
-B<Note>: because Perl treats C<Nil> as false, you must check the return value
+B<Note>: because Raku treats C<Nil> as false, you must check the return value
 of C<none_u> with C<defined> or you will get the opposite result of what you
 expect.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say "No non-negative values"
       if none($x,$y,$z) >= 0;
@@ -774,7 +774,7 @@ For an empty LIST, C<notall> returns False and C<notall_u> returns C<Nil>.
 
 Thus, C<< notall_u(@list) >> is equivalent to C<< @list ?? notall(@list) !! Nil >>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say "Not all values are non-negative"
       if not all($x,$y,$z) >= 0;
@@ -800,7 +800,7 @@ The expression C<one BLOCK, LIST> is almost equivalent to
 C<1 == True BLOCK, LIST>, except for short-cutting.  Evaluation of BLOCK will
 immediately stop at the second true value seen.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say "Precisely one value defined"
       if ($x ^ $y ^ $z).defined;
@@ -835,7 +835,7 @@ With the C<Scalar> positional parameter:
     @list = 1 2 3 4
     $last = 8
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @mult = @list.map: -> $_ is copy { $_ *= 2 };
 
@@ -877,7 +877,7 @@ parameters to BLOCK.
     my @b = <1 2 3>;
     my @x = pairwise -> $a, $b { $a, $b }, @a, @b;    # returns a, 1, b, 2, c, 3
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = zip(@a,@b).map: -> ($a,$b) { $a + $b };
 
@@ -903,7 +903,7 @@ Examples:
 
 C<zip> is an alias for C<mesh>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = zip(@a,@b).flat;
 
@@ -927,7 +927,7 @@ then the second, then the third, etc, until all arrays are exhausted.
 
 C<zip_unflatten> is an alias for C<zip6>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = zip(@a,@b);
 
@@ -952,7 +952,7 @@ so on.  Undefined entries in any given array are skipped.
     my $cmp = listcmp @seq, @prim, @fib;
     # { 1 => [0, 2], 2 => [0, 1, 2], 3 => [0, 1], 5 => [1] }
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = zip(@a,@b);
 
@@ -990,7 +990,7 @@ parameter has been specified.
 
 C<distinct> is an alias for C<uniq>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = (1, 1, 2, 2, 3, 5, 3, 4).unique;
     my $x = (1, 1, 2, 2, 3, 5, 3, 4).unique.elems;
@@ -1016,7 +1016,7 @@ as in LIST.  Returns the number of elements occurring more than once in LIST.
     my @y = duplicates (1,1,2,4,7,2,3,4,6,9);          # returns (1,2,4)
     my $n = duplicates Scalar, (1,1,2,4,7,2,3,4,6,9);  # returns 3
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @y = (1,1,2,4,7,2,3,4,6,9).repeated;
     my $n = (1,1,2,4,7,2,3,4,6,9).repeated.elems;
@@ -1030,7 +1030,7 @@ Returns a hash of distinct values and the corresponding frequency.
     #  'WDR 4' => 11, 'WDR 5' => 14, 'WDR Eins Live' => 14,
     #  'Deutschlandradio Kultur' => 8,...)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my %f := %radio_nrw.values.Bag;
 
@@ -1068,7 +1068,7 @@ Same as C<after> but also includes the element for which BLOCK is true.
 
     my @x = after_incl { $_ %% 5 }, (1..9);   # returns (5, 6, 7, 8, 9)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = (1..9).toggle: * %% 5, :off;
 
@@ -1080,7 +1080,7 @@ each element in LIST in turn.
 
     my @x = before { $_ %% 5 }, (1..9);   # returns (1, 2, 3, 4)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = (1..9).toggle: * %% 5;
 
@@ -1126,7 +1126,7 @@ L<List::Util/shuffle>, but stops after COUNT.
     my @r  = samples 10, (1..10); # same as (1..10).pick(*)
     my @r2 = samples 5, (1..10);  # same as (1..10).pick(5)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @r  = (1..10).pick(*);
     my @r2 = (1..10).pick(5);
@@ -1150,7 +1150,7 @@ The iterator returns the empty list when it reached the end of all arrays.
 If the iterator is passed an argument of 'C<index>', then it returns
 the index of the last fetched set of values, as a scalar.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     while zip(@a,@b,@c) -> ($a,$b,$c) { .... }
 
@@ -1178,7 +1178,7 @@ This prints
     d e f
     g
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     for @x.rotor(3,:partial) -> @vals {
         print "@vals[]\n";
@@ -1201,7 +1201,7 @@ element has been found.
 
 C<first_value> is an alias for C<firstval>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say @list.first: *.starts-with('c');
     say @list.first: *.starts-with('b');
@@ -1237,7 +1237,7 @@ found.
 
 C<last_value> is an alias for C<lastval>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     say @list.first: *.starts-with('c'), :end;
     say @list.first: *.starts-with('b'), :end;
@@ -1297,7 +1297,7 @@ of values:
 
     my @x = indexes { $_ %% 2 } (1..10);   # returns (1, 3, 5, 7, 9)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @x = (1..10).grep: * %% 2, :k;
 
@@ -1321,7 +1321,7 @@ Returns C<-1> if no such item could be found.
 
 C<first_index> is an alias for C<firstidx>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     printf "item with index %i in list is 4", @list.first: * == 4, :k;
 
@@ -1368,7 +1368,7 @@ Returns C<-1> if no such item could be found.
 
 C<last_index> is an alias for C<lastidx>.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     printf "item with index %i in list is 4", @list.first: * == 4, :k, :end;
 
@@ -1401,7 +1401,7 @@ This sorts strings by generating sort keys which zero-pad the embedded numbers
 to some level (9 digits in this case), helping to ensure the lexical sort puts
 them in the correct order.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @sorted = @people.sort: *.name;
 
@@ -1409,17 +1409,17 @@ them in the correct order.
 
 Similar to C<sort_by> but compares its key values numerically.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my @sorted = <10 1 20 42>.sort: +*;
 
 =head3 qsort BLOCK, ARRAY
 
 This sorts the given array B<in place> using the given compare code.  The
-Perl 6 version uses the basic sort functionality as provided by the C<sort>
+Raku version uses the basic sort functionality as provided by the C<sort>
 built-in function.
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     @people .= sort;
 
@@ -1535,7 +1535,7 @@ Passes each item in LIST to BLOCK in turn:
 
     printf "%i item(s) are defined", true { defined($_) }, @list;
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     print "@list.grep(*.defined).elems() item(s) are defined";
 
@@ -1546,7 +1546,7 @@ Passes each item in LIST to BLOCK in turn:
 
     printf "%i item(s) are not defined", false { defined($_) }, @list;
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     print "@list.grep(!*.defined).elems() item(s) are not defined";
 
@@ -1559,8 +1559,8 @@ element of LIST.
 
     my $reduced = reduce_0 -> $a, $b { $a + $b }, @list;
 
-In the Perl 5 version, C<$_> is also set to the index of the element being
-processed.  This is not the case in the Perl 6 version for various reasons.
+In the Perl version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Raku version for various reasons.
 Should you need the index value in your calculation, you can post-increment
 the anonymous state variable instead: C<$++>:
 
@@ -1577,8 +1577,8 @@ element of LIST.
 
     my $reduced = reduce_1 -> $a, $b { $a * $b }, @list;
 
-In the Perl 5 version, C<$_> is also set to the index of the element being
-processed.  This is not the case in the Perl 6 version for various reasons.
+In the Perl version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Raku version for various reasons.
 Should you need the index value in your calculation, you can post-increment
 the anonymous state variable instead: C<$++>:
 
@@ -1595,8 +1595,8 @@ element of LIST.
 
     my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
 
-In the Perl 5 version, C<$_> is also set to the index of the element being
-processed.  This is not the case in the Perl 6 version for various reasons.
+In the Perl version, C<$_> is also set to the index of the element being
+processed.  This is not the case in the Raku version for various reasons.
 Should you need the index value in your calculation, you can post-increment
 the anonymous state variable instead: C<$++>:
 
@@ -1612,7 +1612,7 @@ empty list if LIST was empty.
 
     my ($min,$max) = minmax (43,66,77,23,780); # (23,780)
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my $range = <43,66,77,23,780>.minmax( +* );
     my $range = (43,66,77,23,780).minmax;   # auto-numerically compares
@@ -1625,7 +1625,7 @@ maximum. Returns the empty list if LIST was empty.
 
     my ($min,$max) = minmaxstr <foo bar baz zippo>; # <bar zippo>
 
-=head4 Idiomatic Perl 6 ways
+=head4 Idiomatic Raku ways
 
     my $range = (43,66,77,23,780).minmax( ~* );
     my $range = <foo bar baz zippo>.minmax;  # auto-string compares
@@ -1636,7 +1636,7 @@ L<List::Util>, L<List::AllUtils>, L<List::UtilsBy>
 
 =head1 THANKS
 
-Thanks to all of the individuals who have contributed to the Perl 5 version
+Thanks to all of the individuals who have contributed to the Perl version
 of this module.
 
 =head1 AUTHOR
@@ -1653,7 +1653,7 @@ Copyright 2018-2019 Elizabeth Mattijsen
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.
 
-Re-imagined from the Perl 5 version as part of the CPAN Butterfly Plan. Perl 5
+Re-imagined from the Perl version as part of the CPAN Butterfly Plan. Perl
 version originally developed by Tassilo von Parseval, subsequently maintained
 by Adam Kennedy and Jens Rehsack.
 

@@ -1,9 +1,7 @@
-[![Build Status](https://travis-ci.org/lizmat/List-MoreUtils.svg?branch=master)](https://travis-ci.org/lizmat/List-MoreUtils)
-
 NAME
 ====
 
-List::MoreUtils - Port of Perl 5's List::MoreUtils 0.428
+List::MoreUtils - Port of Perl's List::MoreUtils 0.428
 
 SYNOPSIS
 ========
@@ -35,37 +33,37 @@ Nothing by default. To import all of this module's symbols use the `:all` tag. O
 Porting Caveats
 ===============
 
-Perl 6 does not have the concept of `scalar` and `list` context. Usually, the effect of a scalar context can be achieved by prefixing `+` to the result, which would effectively return the number of elements in the result, which usually is the same as the scalar context of Perl 5 of these functions.
+Raku does not have the concept of `scalar` and `list` context. Usually, the effect of a scalar context can be achieved by prefixing `+` to the result, which would effectively return the number of elements in the result, which usually is the same as the scalar context of Perl of these functions.
 
-Perl 6 does not have a magic `$a` and `$b`. But they can be made to exist by specifying the correct signature to blocks, specifically "-> $a, $b". These have been used in all examples that needed them. Just using the signature auto-generating `$^a` and `$^b` would be more Perl 6 like. But since we want to keep the documentation as close to the original as possible, it was decided to specifically specify the "-> $a, $b" signatures.
+Raku does not have a magic `$a` and `$b`. But they can be made to exist by specifying the correct signature to blocks, specifically "-> $a, $b". These have been used in all examples that needed them. Just using the signature auto-generating `$^a` and `$^b` would be more Raku like. But since we want to keep the documentation as close to the original as possible, it was decided to specifically specify the "-> $a, $b" signatures.
 
-Many functions take a `&code` parameter of a `Block` to be called by the function. Many of these assume **$_** will be set. In Perl 6, this happens automagically if you create a block without a definite or implicit signature:
+Many functions take a `&code` parameter of a `Block` to be called by the function. Many of these assume **$_** will be set. In Raku, this happens automagically if you create a block without a definite or implicit signature:
 
     say { $_ == 4 }.signature;   # (;; $_? is raw)
 
 which indicates the Block takes an optional parameter that will be aliased as `$_` inside the Block.
 
-Perl 6 also doesn't have a single `undef` value, but instead has `Type Objects`, which could be considered undef values, but with a type annotation. In this module, `Nil` (a special value denoting the absence of a value where there should have been one) is used instead of `undef`.
+Raku also doesn't have a single `undef` value, but instead has `Type Objects`, which could be considered undef values, but with a type annotation. In this module, `Nil` (a special value denoting the absence of a value where there should have been one) is used instead of `undef`.
 
-Also note there are no special parsing rules with regards to blocks in Perl 6. So a comma is **always** required after having specified a block.
+Also note there are no special parsing rules with regards to blocks in Raku. So a comma is **always** required after having specified a block.
 
-The following functions are actually built-ins in Perl 6.
+The following functions are actually built-ins in Raku.
 
     any all none minmax uniq zip
 
-They mostly provide the same or similar semantics, but there may be subtle differences, so it was decided to not just use the built-ins. If these functions are imported from this library in a scope, they will used instead of the Perl 6 builtins. The easiest way to use both the functions of this library and the Perl 6 builtins in the same scope, is to use the method syntax for the Perl 6 versions.
+They mostly provide the same or similar semantics, but there may be subtle differences, so it was decided to not just use the built-ins. If these functions are imported from this library in a scope, they will used instead of the Raku builtins. The easiest way to use both the functions of this library and the Raku builtins in the same scope, is to use the method syntax for the Raku versions.
 
     my @a = 42,5,2,98792,88;
-    {  # Note: imports in Perl 6 are always lexically scoped
+    {  # Note: imports in Raku are always lexically scoped
         use List::Util <minmax>;
-        say minmax @a;  # Ported Perl 5 version
-        say @a.minmax;  # Perl 6 version
+        say minmax @a;  # Ported Perl version
+        say @a.minmax;  # Raku version
     }
-    say minmax @a;  # Perl 6 version again
+    say minmax @a;  # Raku version again
 
-Many functions returns either `True` or `False`. These are `Bool`ean objects in Perl 6, rather than just `0` or `1`. However, if you use a Boolean value in a numeric context, they are silently coerced to 0 and 1. So you can still use them in numeric calculations as if they are 0 and 1.
+Many functions returns either `True` or `False`. These are `Bool`ean objects in Raku, rather than just `0` or `1`. However, if you use a Boolean value in a numeric context, they are silently coerced to 0 and 1. So you can still use them in numeric calculations as if they are 0 and 1.
 
-Some functions return something different in scalar context than in list context. Perl 6 doesn't have those concepts. Functions that are supposed to return something different in scalar context also the `Scalar` type as the first positional parameter to indicate the result like the result of a scalar context, is required. It will be noted with the function in question if that feature is available.
+Some functions return something different in scalar context than in list context. Raku doesn't have those concepts. Functions that are supposed to return something different in scalar context also the `Scalar` type as the first positional parameter to indicate the result like the result of a scalar context, is required. It will be noted with the function in question if that feature is available.
 
 FUNCTIONS
 =========
@@ -107,9 +105,9 @@ For an empty LIST, `all` returns True (i.e. no values failed the condition) and 
 
 Thus, `all_u(@list) ` is equivalent to `@list ?? all(@list) !! Nil `.
 
-**Note**: because Perl treats `Nil` as false, you must check the return value of `all_u` with `defined` or you will get the opposite result of what you expect.
+**Note**: because Raku treats `Nil` as false, you must check the return value of `all_u` with `defined` or you will get the opposite result of what you expect.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say "All values are non-negative"
       if $x & $y & $z >= 0;
@@ -130,7 +128,7 @@ For an empty LIST, `any` returns False and `any_u` returns `Nil`.
 
 Thus, `any_u(@list) ` is equivalent to `@list ?? any(@list) !! undef `.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say "At least one non-negative value"
       if $x | $y | $z >= 0;
@@ -151,9 +149,9 @@ For an empty LIST, `none` returns True (i.e. no values failed the condition) and
 
 Thus, `none_u(@list) ` is equivalent to `@list ?? none(@list) !! Nil `.
 
-**Note**: because Perl treats `Nil` as false, you must check the return value of `none_u` with `defined` or you will get the opposite result of what you expect.
+**Note**: because Raku treats `Nil` as false, you must check the return value of `none_u` with `defined` or you will get the opposite result of what you expect.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say "No non-negative values"
       if none($x,$y,$z) >= 0;
@@ -174,7 +172,7 @@ For an empty LIST, `notall` returns False and `notall_u` returns `Nil`.
 
 Thus, `notall_u(@list) ` is equivalent to `@list ?? notall(@list) !! Nil `.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say "Not all values are non-negative"
       if not all($x,$y,$z) >= 0;
@@ -197,7 +195,7 @@ For an empty LIST, `one` returns False and `one_u` returns `Nil`.
 
 The expression `one BLOCK, LIST` is almost equivalent to `1 == True BLOCK, LIST`, except for short-cutting. Evaluation of BLOCK will immediately stop at the second true value seen.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say "Precisely one value defined"
       if ($x ^ $y ^ $z).defined;
@@ -230,7 +228,7 @@ With the `Scalar` positional parameter:
     @list = 1 2 3 4
     $last = 8
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @mult = @list.map: -> $_ is copy { $_ *= 2 };
 
@@ -269,7 +267,7 @@ Evaluates BLOCK for each pair of elements in ARRAY1 and ARRAY2 and returns a new
     my @b = <1 2 3>;
     my @x = pairwise -> $a, $b { $a, $b }, @a, @b;    # returns a, 1, b, 2, c, 3
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = zip(@a,@b).map: -> ($a,$b) { $a + $b };
 
@@ -294,7 +292,7 @@ Examples:
 
 `zip` is an alias for `mesh`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = zip(@a,@b).flat;
 
@@ -317,7 +315,7 @@ Returns a list of arrays consisting of the first elements of each array, then th
 
 `zip_unflatten` is an alias for `zip6`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = zip(@a,@b);
 
@@ -340,7 +338,7 @@ Returns an associative list of elements and every *id* of the list it was found 
     my $cmp = listcmp @seq, @prim, @fib;
     # { 1 => [0, 2], 2 => [0, 1, 2], 3 => [0, 1], 5 => [1] }
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = zip(@a,@b);
 
@@ -373,7 +371,7 @@ Returns a new list by stripping duplicate values in LIST by comparing the values
 
 `distinct` is an alias for `uniq`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = (1, 1, 2, 2, 3, 5, 3, 4).unique;
     my $x = (1, 1, 2, 2, 3, 5, 3, 4).unique.elems;
@@ -392,7 +390,7 @@ Returns a new list by stripping values in LIST occuring more than once by compar
     my @y = duplicates (1,1,2,4,7,2,3,4,6,9);          # returns (1,2,4)
     my $n = duplicates Scalar, (1,1,2,4,7,2,3,4,6,9);  # returns 3
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @y = (1,1,2,4,7,2,3,4,6,9).repeated;
     my $n = (1,1,2,4,7,2,3,4,6,9).repeated.elems;
@@ -406,7 +404,7 @@ Returns a hash of distinct values and the corresponding frequency.
     #  'WDR 4' => 11, 'WDR 5' => 14, 'WDR Eins Live' => 14,
     #  'Deutschlandradio Kultur' => 8,...)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my %f := %radio_nrw.values.Bag;
 
@@ -441,7 +439,7 @@ Same as `after` but also includes the element for which BLOCK is true.
 
     my @x = after_incl { $_ %% 5 }, (1..9);   # returns (5, 6, 7, 8, 9)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = (1..9).toggle: * %% 5, :off;
 
@@ -451,7 +449,7 @@ Returns a list of values of LIST up to (and not including) the point where BLOCK
 
     my @x = before { $_ %% 5 }, (1..9);   # returns (1, 2, 3, 4)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = (1..9).toggle: * %% 5;
 
@@ -493,7 +491,7 @@ Returns a new list containing COUNT random samples from LIST. Is similar to [Lis
     my @r  = samples 10, (1..10); # same as (1..10).pick(*)
     my @r2 = samples 5, (1..10);  # same as (1..10).pick(5)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @r  = (1..10).pick(*);
     my @r2 = (1..10).pick(5);
@@ -514,7 +512,7 @@ The iterator returns the empty list when it reached the end of all arrays.
 
 If the iterator is passed an argument of '`index`', then it returns the index of the last fetched set of values, as a scalar.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     while zip(@a,@b,@c) -> ($a,$b,$c) { .... }
 
@@ -540,7 +538,7 @@ This prints
     d e f
     g
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     for @x.rotor(3,:partial) -> @vals {
         print "@vals[]\n";
@@ -562,7 +560,7 @@ Returns the first element in LIST for which BLOCK evaluates to true. Each elemen
 
 `first_value` is an alias for `firstval`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say @list.first: *.starts-with('c');
     say @list.first: *.starts-with('b');
@@ -594,7 +592,7 @@ Returns the last value in LIST for which BLOCK evaluates to true. Each element i
 
 `last_value` is an alias for `lastval`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     say @list.first: *.starts-with('c'), :end;
     say @list.first: *.starts-with('b'), :end;
@@ -645,7 +643,7 @@ Evaluates BLOCK for each element in LIST (passed to BLOCK as the parameter) and 
 
     my @x = indexes { $_ %% 2 } (1..10);   # returns (1, 3, 5, 7, 9)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @x = (1..10).grep: * %% 2, :k;
 
@@ -668,7 +666,7 @@ Returns `-1` if no such item could be found.
 
 `first_index` is an alias for `firstidx`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     printf "item with index %i in list is 4", @list.first: * == 4, :k;
 
@@ -713,7 +711,7 @@ Returns `-1` if no such item could be found.
 
 `last_index` is an alias for `lastidx`.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     printf "item with index %i in list is 4", @list.first: * == 4, :k, :end;
 
@@ -739,7 +737,7 @@ except that it guarantees the `name` accessor will be executed only once per val
 
 This sorts strings by generating sort keys which zero-pad the embedded numbers to some level (9 digits in this case), helping to ensure the lexical sort puts them in the correct order.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @sorted = @people.sort: *.name;
 
@@ -747,15 +745,15 @@ This sorts strings by generating sort keys which zero-pad the embedded numbers t
 
 Similar to `sort_by` but compares its key values numerically.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my @sorted = <10 1 20 42>.sort: +*;
 
 ### qsort BLOCK, ARRAY
 
-This sorts the given array **in place** using the given compare code. The Perl 6 version uses the basic sort functionality as provided by the `sort` built-in function.
+This sorts the given array **in place** using the given compare code. The Raku version uses the basic sort functionality as provided by the `sort` built-in function.
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     @people .= sort;
 
@@ -855,7 +853,7 @@ Counts the number of elements in LIST for which the criterion in BLOCK is true. 
 
     printf "%i item(s) are defined", true { defined($_) }, @list;
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     print "@list.grep(*.defined).elems() item(s) are defined";
 
@@ -865,7 +863,7 @@ Counts the number of elements in LIST for which the criterion in BLOCK is false.
 
     printf "%i item(s) are not defined", false { defined($_) }, @list;
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     print "@list.grep(!*.defined).elems() item(s) are not defined";
 
@@ -875,7 +873,7 @@ Reduce LIST by calling BLOCK in scalar context for each element of LIST. The fir
 
     my $reduced = reduce_0 -> $a, $b { $a + $b }, @list;
 
-In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+In the Perl version, `$_` is also set to the index of the element being processed. This is not the case in the Raku version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
 
     my $reduced = reduce_0 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
 
@@ -887,7 +885,7 @@ Reduce LIST by calling BLOCK in scalar context for each element of LIST. The fir
 
     my $reduced = reduce_1 -> $a, $b { $a * $b }, @list;
 
-In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+In the Perl version, `$_` is also set to the index of the element being processed. This is not the case in the Raku version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
 
     my $reduced = reduce_1 -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
 
@@ -899,7 +897,7 @@ Reduce LIST by calling BLOCK in scalar context for each element of LIST. The fir
 
     my $reduced = reduce_u -> $a, $b { $a.push($b) }, @list;
 
-In the Perl 5 version, `$_` is also set to the index of the element being processed. This is not the case in the Perl 6 version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
+In the Perl version, `$_` is also set to the index of the element being processed. This is not the case in the Raku version for various reasons. Should you need the index value in your calculation, you can post-increment the anonymous state variable instead: `$++`:
 
     my $reduced = reduce_u -> $a, $b { dd $++ }, @list; # 0 1 2 3 4 5 ...
 
@@ -911,7 +909,7 @@ Calculates the minimum and maximum of LIST and returns a two element list with t
 
     my ($min,$max) = minmax (43,66,77,23,780); # (23,780)
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my $range = <43,66,77,23,780>.minmax( +* );
     my $range = (43,66,77,23,780).minmax;   # auto-numerically compares
@@ -922,7 +920,7 @@ Computes the minimum and maximum of LIST using string compare and returns a two 
 
     my ($min,$max) = minmaxstr <foo bar baz zippo>; # <bar zippo>
 
-#### Idiomatic Perl 6 ways
+#### Idiomatic Raku ways
 
     my $range = (43,66,77,23,780).minmax( ~* );
     my $range = <foo bar baz zippo>.minmax;  # auto-string compares
@@ -935,7 +933,7 @@ SEE ALSO
 THANKS
 ======
 
-Thanks to all of the individuals who have contributed to the Perl 5 version of this module.
+Thanks to all of the individuals who have contributed to the Perl version of this module.
 
 AUTHOR
 ======
@@ -951,5 +949,5 @@ Copyright 2018-2019 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
-Re-imagined from the Perl 5 version as part of the CPAN Butterfly Plan. Perl 5 version originally developed by Tassilo von Parseval, subsequently maintained by Adam Kennedy and Jens Rehsack.
+Re-imagined from the Perl version as part of the CPAN Butterfly Plan. Perl version originally developed by Tassilo von Parseval, subsequently maintained by Adam Kennedy and Jens Rehsack.
 

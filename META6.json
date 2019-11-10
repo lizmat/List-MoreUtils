@@ -5,7 +5,7 @@
   ],
   "build-depends" : [ ],
   "depends" : [ ],
-  "description" : "Port of Perl 5's List::MoreUtils 0.428",
+  "description" : "Port of Perl's List::MoreUtils 0.428",
   "license" : "Artistic-2.0",
   "name" : "List::MoreUtils",
   "perl" : "6.c",
@@ -19,5 +19,5 @@
     "CPAN5"
   ],
   "test-depends" : [ ],
-  "version" : "0.0.5"
+  "version" : "0.0.6"
 }
