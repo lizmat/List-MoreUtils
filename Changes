@@ -2,6 +2,9 @@ Revision history for List::MoreUtils
 
 {{$NEXT}}
 
+0.0.7  2020-04-13T13:38:28+02:00
+    - fixed qsort, problem spotted by AlexDaniel++
+
 0.0.6  2019-11-10T13:30:05+01:00
     - changed Perl 6 to Raku, and Perl 5 to Perl
 

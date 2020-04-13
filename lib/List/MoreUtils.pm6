@@ -1,6 +1,6 @@
 use v6.c;
 
-module List::MoreUtils:ver<0.0.6>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.7>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -388,7 +388,7 @@ module List::MoreUtils:ver<0.0.6>:auth<cpan:ELIZABETH> {
     }
 
     our sub qsort(&code, @values) is export(:all) {
-        @values .= sort( &code ).List
+        (@values .= sort( &code )).List
     }
 
     our sub true(&code, @values) is export(:all) {
@@ -1648,7 +1648,7 @@ and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2018-2019 Elizabeth Mattijsen
+Copyright 2018,2019,2020 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.
