@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <natatime>;
 use Test;
@@ -21,4 +21,4 @@ while it() -> @vals {
 }
 is-deeply @r, @a, "natatime with numbers";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

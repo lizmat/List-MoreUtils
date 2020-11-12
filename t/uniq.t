@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <uniq distinct>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -31,4 +31,4 @@ ok &uniq =:= &distinct, 'is uniq the same as distinct';
     is uniq( @a, :scalar), 10 + 676, 'we got 10 + 676 values occurring once';
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <one_u>;
 use Test;
@@ -13,4 +13,4 @@ is one_u( * == 0, @list), False, '0 did not occur once';
 is one_u( * > 1, @list), False, 'greater than 1 occurred more than once';
 is one_u( { False }, []), Nil, 'empty list returns Nil always';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

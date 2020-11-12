@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <after>;
 use Test;
@@ -14,4 +14,4 @@ is-deeply @x, [], 'Got the empty list';
 @x = after *.starts-with("b"), <bar baz foo>;
 is-deeply @x, [<baz foo>], "after /^b/";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

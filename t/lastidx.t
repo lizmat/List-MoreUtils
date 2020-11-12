@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <lastidx last_index>;
 use Test;
@@ -14,4 +14,4 @@ is lastidx( { not .defined }, @list), -1, "invalid lastidx";
 is lastidx( { .defined }, @list), 9999, "real lastidx";
 is lastidx( { True }, ()), -1, "empty lastidx";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

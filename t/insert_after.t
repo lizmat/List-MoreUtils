@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <insert_after>;
 use Test;
@@ -30,4 +30,4 @@ insert_after { not defined($_) }, "longer" => @list;
 @longer[2] = Nil;
 is-deeply @list, @longer, "insert after type object";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

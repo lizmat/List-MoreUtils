@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <true>;
 use Test;
@@ -10,4 +10,4 @@ is true( { .defined }, @list), 10000, 'are all values defined';
 is true( { not .defined }, @list), 0, 'are no values undefined';
 is true( { $_ < 2 }, @list), 1, 'are all but one value < 2';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <zip6 zip_unflatten>;
 use Test;
@@ -33,4 +33,4 @@ ok &zip6 =:= &zip_unflatten, 'is zip6 the same as zip_unflatten';
         "zip6 one list with an empty list";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

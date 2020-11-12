@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <onlyres only_result>;
 use Test;
@@ -12,4 +12,4 @@ is onlyres( { 2 * $_ if $_ > 5 }, (4 .. 9) ), Nil, "no right only result";
 is onlyres( { $_ > 3 }, (1 .. 4) ), True, 'did we get boolean result';
 is onlyres( { $_ > 5 }, (1 .. 4) ), Nil, 'did we get no result';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

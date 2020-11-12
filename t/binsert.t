@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <binsert bsearch_insert>;
 use Test;
@@ -64,4 +64,4 @@ for @even.reverse -> $v {
 is-deeply @in, @expected,
   "binsert existing even elements reversely into even list succeeded";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,6 +1,6 @@
-use v6.c;
+use v6.*;
 
-module List::MoreUtils:ver<0.0.7>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.8>:auth<cpan:ELIZABETH> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -563,7 +563,7 @@ sub EXPORT(*@args, *%_) {
 
 =head1 NAME
 
-List::MoreUtils - Port of Perl's List::MoreUtils 0.428
+Raku port of Perl's List::MoreUtils module 0.430
 
 =head1 SYNOPSIS
 
@@ -578,6 +578,9 @@ List::MoreUtils - Port of Perl's List::MoreUtils 0.428
     use List::MoreUtils ':all';
 
 =head1 DESCRIPTION
+
+This module tries to mimic the behaviour of Perl's C<List::MoreUtils> module
+as closely as possible in the Raku Programming Language.
 
 List::MoreUtils provides some trivial but commonly needed functionality on
 lists which is not going to go into C<List::Util>.
@@ -1648,7 +1651,7 @@ and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2018,2019,2020 Elizabeth Mattijsen
+Copyright 2018-2020 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.
@@ -1659,4 +1662,4 @@ by Adam Kennedy and Jens Rehsack.
 
 =end pod
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

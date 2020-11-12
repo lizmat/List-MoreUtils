@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <occurrences>;
 use Test;
@@ -41,4 +41,4 @@ my $n_et    = @lorem.grep( 'et' ).elems;
       "occurrences of integer / Any probes";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

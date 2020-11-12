@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <mode>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -29,4 +29,5 @@ is mode(@lorem), (11,','), 'we do not have other things with that frequency';
     is mode(Scalar, @probes), @m[0], "bimodal result in scalar context";
     is mode(@probes, :scalar), @m[0], "bimodal result in scalar context";
 }
-# vim: ft=perl6 expandtab sw=4
+
+# vim: expandtab shiftwidth=4

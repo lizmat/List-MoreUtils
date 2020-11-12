@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <indexes>;
 use Test;
@@ -16,4 +16,4 @@ my @n = map { $_ + 1 }, @o;
 is-deeply @o, @n, "indexes behaves like grep on modified \$_";
 is-deeply @x, [7 .. 9], "indexes/modify";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

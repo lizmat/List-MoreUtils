@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <before>;
 use Test;
@@ -14,4 +14,4 @@ is-deeply @x, [<bar baz>], 'Got the whole list';
 @x = before *.starts-with("b"), <alpha bar baz foo>;
 is-deeply @x, [<alpha>], "before /^b/";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

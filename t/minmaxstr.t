@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <minmaxstr>;
 use Test;
@@ -13,4 +13,4 @@ is-deeply minmaxstr(@list), ("AA","ZZ Top"), "even number of elements";
 
 is-deeply minmaxstr(("foo",)), ("foo","foo"), "single element list";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

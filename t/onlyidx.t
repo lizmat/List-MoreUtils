@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <onlyidx only_index>;
 use Test;
@@ -15,4 +15,4 @@ is onlyidx( { not .defined }, @list), -1, "invalid onlyidx";
 is onlyidx( { .defined }, @list), -1, "real onlyidx";
 is onlyidx( { True }, ()), -1, "empty onlyidx";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

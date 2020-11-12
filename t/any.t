@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <any>;
 use Test;
@@ -13,4 +13,4 @@ is any( !*.defined, @list), False, 'no elements not defined';
 is any( !*.defined, (Int,)), True, 'at least one element not defined';
 is any( { True }, []), False, 'empty list returns False always';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

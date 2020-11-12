@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <minmax>;
 use Test;
@@ -16,4 +16,4 @@ is-deeply minmax(@list), (-10/3,10000), "some rats";
 
 is-deeply minmax((-1,)), (-1,-1), "single element list";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

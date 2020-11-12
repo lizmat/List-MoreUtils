@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <reduce_1>;
 use Test;
@@ -11,4 +11,4 @@ plan 1;
     is $product, 720, "the product";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

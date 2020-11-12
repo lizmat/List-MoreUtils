@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <notall>;
 use Test;
@@ -11,4 +11,4 @@ is notall( * < 10000, @list), True, 'not all elements smaller than 10000';
 is notall( * < 50000, @list), False, 'all elements smaller than 50000';
 is notall( { False }, []), False, 'empty list returns False always';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

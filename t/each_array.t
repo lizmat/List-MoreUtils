@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <each_array each_arrayref>;
 use Test;
@@ -63,4 +63,4 @@ is-deeply @a, [1 .. 26], "got numbers from each_arrayref";
 is-deeply @a, @nums, "got array from each_arrayref";
 is-deeply @b, ['A' .. 'Z'], "got strings from each_arrayref";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

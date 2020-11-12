@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <upper_bound>;
 use Test;
@@ -32,4 +32,4 @@ for @uout -> $elem {
     is upper_bound( { $_ - $elem }, @list), +@list, "put bigger $elem at end";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

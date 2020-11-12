@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <qsort>;
 use Test;
@@ -16,4 +16,5 @@ is-deeply @l, @ltn_asc, "sorted ascending";
 @l = @ltn_asc;
 qsort -> $a, $b { $b <=> $a }, @l;
 is-deeply @l, @ltn_des, "sorted descending";
-# vim: ft=perl6 expandtab sw=4
+
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <samples>;
 use Test;
@@ -29,4 +29,4 @@ plan 6;
     is +@u, 10, "samples doesn't add any string twice";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <one>;
 use Test;
@@ -13,4 +13,4 @@ is one( * == 0, @list), False, '0 did not occur once';
 is one( * > 1, @list), False, 'greater than 1 occurred more than once';
 is one( { False }, []), False, 'empty list returns False always';
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

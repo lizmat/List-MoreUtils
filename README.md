@@ -1,7 +1,7 @@
 NAME
 ====
 
-List::MoreUtils - Port of Perl's List::MoreUtils 0.428
+Raku port of Perl's List::MoreUtils module 0.430
 
 SYNOPSIS
 ========
@@ -18,6 +18,8 @@ SYNOPSIS
 
 DESCRIPTION
 ===========
+
+This module tries to mimic the behaviour of Perl's `List::MoreUtils` module as closely as possible in the Raku Programming Language.
 
 List::MoreUtils provides some trivial but commonly needed functionality on lists which is not going to go into `List::Util`.
 
@@ -945,7 +947,7 @@ Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments an
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2018,2019,2020 Elizabeth Mattijsen
+Copyright 2018-2020 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <reduce_u>;
 use Test;
@@ -12,4 +12,4 @@ plan 1;
     is $wa, 3.15, "weighted average of exam";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

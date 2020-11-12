@@ -2,6 +2,10 @@ Revision history for List::MoreUtils
 
 {{$NEXT}}
 
+0.0.8  2020-11-12T18:21:08+01:00
+    - Change name of distribution
+    - Force to highest possible Raku version
+
 0.0.7  2020-04-13T13:38:28+02:00
     - fixed qsort, problem spotted by AlexDaniel++
 

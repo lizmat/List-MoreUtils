@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <bremove bsearch_remove>;
 use Test;
@@ -43,4 +43,4 @@ for @even.reverse -> $v {
 }
 is-deeply @in, @odd, "bremove even elements reversely succeeded";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

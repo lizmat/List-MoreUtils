@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <mesh zip>;
 use Test;
@@ -33,4 +33,4 @@ ok &mesh =:= &zip, 'is zip the same as mesh';
         "mesh one list with an empty list";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

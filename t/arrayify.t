@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <arrayify>;
 use Test;
@@ -33,4 +33,4 @@ plan 4;
       "arrayified struct with three elements";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <frequency>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -59,4 +59,4 @@ plan 5110;
     is $u, @s + @d, "scalar result of frequency of numbers/strings mixture";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

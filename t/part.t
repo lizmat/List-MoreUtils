@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <part>;
 use Test;
@@ -22,4 +22,4 @@ nok @part[1].defined, " ii: part 3";
 nok @part[2].defined, "iii: part 3";
 is-deeply @part[3], [1 .. 12], " iv: part 3";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <apply>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -22,4 +22,4 @@ is $ITEM, "foobar", ":scalar returns last item";
 my $item = apply { s:g/^ \s+ | \s+ $// }, @list, :scalar;
 is $item, "foobar", ":scalar returns last item";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <singleton>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -36,4 +36,4 @@ plan 9;
     is singleton( @a, :scalar), 200 + 676, 'we got 200 + 676 values occurring once';
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

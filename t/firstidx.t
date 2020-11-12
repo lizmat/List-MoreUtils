@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <firstidx first_index>;
 use Test;
@@ -14,4 +14,4 @@ is firstidx( { not .defined }, @list), -1, "invalid firstidx";
 is firstidx( { .defined }, @list), 0, "real firstidx";
 is firstidx( { True }, ()), -1, "empty firstidx";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

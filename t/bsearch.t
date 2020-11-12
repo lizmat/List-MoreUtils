@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <bsearch>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -31,4 +31,4 @@ for @out -> $elem {
       "did we fail to find $elem listly";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

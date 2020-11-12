@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <pairwise>;
 use Test;
@@ -38,4 +38,4 @@ is-deeply @b, [2, 3, 5, 7, 11, 13], "pwX";
 @c = pairwise -> $a, $b { |($a, $b) }, @a, @b;
 is-deeply @c, [<a 1 b 2 c 3>], "pw map";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <equal_range>;
 use Test;
@@ -13,4 +13,4 @@ is-deeply equal_range( { $_ <=> 2 }, @list), (2,4),   "equal range 2";
 is-deeply equal_range( { $_ <=> 4 }, @list), (10,14), "equal range 4";
 is-deeply equal_range( { $_ <=> 19 }, @list), (+@list,+@list), "equal range 19";
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 use Test;
 use List::MoreUtils <duplicates>;
 %*ENV<RAKUDO_NO_DEPRECATIONS> = True;
@@ -48,4 +48,4 @@ plan 9;
     is $u, +@d, "scalar result of duplicates of numbers/strings mixture";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4

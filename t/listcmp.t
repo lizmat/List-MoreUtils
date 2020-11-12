@@ -1,4 +1,4 @@
-use v6.c;
+use v6.*;
 
 use List::MoreUtils <listcmp>;
 use Test;
@@ -56,4 +56,4 @@ plan 2;
       "Sequence vs. Prime filled with undef sorted out correctly";
 }
 
-# vim: ft=perl6 expandtab sw=4
+# vim: expandtab shiftwidth=4
