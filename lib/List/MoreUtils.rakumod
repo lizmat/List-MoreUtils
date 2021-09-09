@@ -1,6 +1,6 @@
 use v6.*;
 
-module List::MoreUtils:ver<0.0.8>:auth<cpan:ELIZABETH> {
+module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -1644,14 +1644,14 @@ of this module.
 
 =head1 AUTHOR
 
-Elizabeth Mattijsen <liz@wenzperl.nl>
+Elizabeth Mattijsen <liz@raku.rocks>
 
 Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments
 and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2018-2020 Elizabeth Mattijsen
+Copyright 2018, 2019, 2020, 2021 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.

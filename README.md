@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/lizmat/List-MoreUtils/workflows/test/badge.svg)](https://github.com/lizmat/List-MoreUtils/actions)
+
 NAME
 ====
 
@@ -940,14 +942,14 @@ Thanks to all of the individuals who have contributed to the Perl version of thi
 AUTHOR
 ======
 
-Elizabeth Mattijsen <liz@wenzperl.nl>
+Elizabeth Mattijsen <liz@raku.rocks>
 
 Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments and Pull Requests are welcome.
 
 COPYRIGHT AND LICENSE
 =====================
 
-Copyright 2018-2020 Elizabeth Mattijsen
+Copyright 2018, 2019, 2020, 2021 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
