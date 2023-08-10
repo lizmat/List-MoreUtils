@@ -1,6 +1,4 @@
-use v6.*;
-
-module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
+module List::MoreUtils {
     our sub any(&code, @values --> Bool:D) is export(:all) {
         return True if code($_) for @values;
         False
@@ -44,11 +42,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub apply(|) is export(:all) {*}
     multi sub apply(Scalar:U, &code, @values) {
-        _apply(&code, @values).tail
-    }
-    multi sub apply(&code, @values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
         _apply(&code, @values).tail
     }
     multi sub apply(&code, @values) {
@@ -157,11 +150,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub uniq(|) is export(:all) {*}
     multi sub uniq(Scalar:U, @values) { _count_uniq(@values) }
-    multi sub uniq(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        _count_uniq(@values)
-    }
     multi sub uniq(@values) { _uniq(@values) }
     sub _count_uniq(@values) {
         my %seen;
@@ -179,11 +167,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub singleton(|) is export(:all) {*}
     multi sub singleton(Scalar:U, @values) { _singleton(@values).elems }
-    multi sub singleton(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        _singleton(@values).elems
-    }
     multi sub singleton(@values) { _singleton(@values).List }
     sub _singleton(@values is copy) {
         my %once;
@@ -208,11 +191,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub duplicates(|) is export(:all) {*}
     multi sub duplicates(Scalar:U, @values) { _count_duplicates(@values) }
-    multi sub duplicates(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        _count_duplicates(@values)
-    }
     multi sub duplicates(@values) { _duplicates(@values) }
     sub _count_duplicates(@values) {
         my %seen;
@@ -230,11 +208,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub frequency(|) is export(:all) {*}
     multi sub frequency(Scalar:U, @values) { _frequency(@values).elems }
-    multi sub frequency(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        _frequency(@values).elems
-    }
     multi sub frequency(@values) { _frequency(@values).kv.List }
     sub _frequency(@values) {
         my %seen;
@@ -244,11 +217,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub occurrences(|) is export(:all) {*}
     multi sub occurrences(Scalar:U, @values) { occurrences(@values).elems }
-    multi sub occurrences(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        occurrences(@values).elems
-    }
     multi sub occurrences(@values) {
         my @occurrences;
         @occurrences[.value].push(.key) for @values.Bag.pairs;
@@ -257,11 +225,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub mode(|) is export(:all) {*}
     multi sub mode(Scalar:U, @values) { @values.Bag.values.max }
-    multi sub mode(@values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
-        @values.Bag.values.max
-    }
     multi sub mode(@values) {
         my $seen = @values.Bag;
         my $max  = $seen.values.max;
@@ -447,11 +410,6 @@ module List::MoreUtils:ver<0.0.9>:auth<zef:lizmat> {
 
     our proto sub bsearch(|) is export(:all) {*}
     multi sub bsearch(Scalar:U, &code, @values) {
-        _bsearch(&code, @values, False, True)
-    }
-    multi sub bsearch(&code, @values, :$scalar!)
-      is DEPRECATED('Scalar as first positional')
-    {
         _bsearch(&code, @values, False, True)
     }
     multi sub bsearch(&code, @values) {
@@ -1646,12 +1604,16 @@ of this module.
 
 Elizabeth Mattijsen <liz@raku.rocks>
 
+If you like this module, or what I’m doing more generally, committing to a
+L<small sponsorship|https://github.com/sponsors/lizmat/>  would mean a great
+deal to me!
+
 Source can be located at: https://github.com/lizmat/List-MoreUtils . Comments
 and Pull Requests are welcome.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2018, 2019, 2020, 2021 Elizabeth Mattijsen
+Copyright 2018, 2019, 2020, 2021, 2023 Elizabeth Mattijsen
 
 This library is free software; you can redistribute it and/or modify it under
 the Artistic License 2.0.

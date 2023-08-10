@@ -1,0 +1,28 @@
+use Test;
+use List::MoreUtils <bsearch>;
+
+plan 2044;
+
+my @list = my @in = 1 .. 1000;
+for @in -> $elem {
+    is bsearch( Scalar, { $_ - $elem }, @list), True,
+      "did we find $elem scalarly";
+}
+
+for @in -> $elem {
+    is-deeply bsearch( { $_ - $elem }, @list ), [$elem],
+      "did we find $elem listly";
+}
+
+my @out = |(-10 .. 0), |(1001 .. 1011);
+for @out -> $elem {
+    is bsearch( Scalar, { $_ - $elem }, @list), False,
+      "did we fail to find $elem scalarly";
+}
+
+for @out -> $elem {
+    is-deeply bsearch( { $_ - $elem }, @list), [],
+      "did we fail to find $elem listly";
+}
+
+# vim: expandtab shiftwidth=4
